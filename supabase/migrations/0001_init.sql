@@ -606,7 +606,12 @@ grant select, insert on public.recovered_pet_claims to authenticated;
 grant select, update on public.pet_media to authenticated;
 grant select, update on public.potential_matches to authenticated;
 grant select on public.audit_logs to authenticated;
--- service_role keeps full access (bypasses RLS); it is used only in server code.
+-- service_role bypasses RLS and is used only in server code. Grant explicitly so this works whether or not
+-- "Automatically expose new tables" is enabled on the Supabase project.
+grant usage on schema public to anon, authenticated, service_role;
+grant all on all tables in schema public to service_role;
+grant all on all sequences in schema public to service_role;
+grant execute on all functions in schema public to service_role;
 
 -- ---------------------------------------------------------------------
 -- PUBLIC read surface: fixed allow-list of columns, approved + published records only.

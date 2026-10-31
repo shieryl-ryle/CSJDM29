@@ -16,8 +16,6 @@ await db.exec(`
   grant execute on function auth.uid() to anon, authenticated, service_role;
 `);
 await db.exec(readFileSync(new URL("../supabase/migrations/0001_init.sql", import.meta.url), "utf8"));
-// Supabase grants service_role everything by default
-await db.exec(`grant all on all tables in schema public to service_role; grant all on all sequences in schema public to service_role;`);
 
 let pass = 0, fail = 0;
 const results = [];
