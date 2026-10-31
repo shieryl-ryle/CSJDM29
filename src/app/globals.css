@@ -1,0 +1,101 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+
+  --color-brand-50: #eef6f5;
+  --color-brand-100: #d6eae7;
+  --color-brand-200: #aed4cf;
+  --color-brand-500: #3f8a82;
+  --color-brand-600: #2f726b;
+  --color-brand-700: #275c57;
+  --color-brand-800: #1f4945;
+
+  --color-sand-50: #faf8f4;
+  --color-sand-100: #f3eee6;
+  --color-sand-200: #e6dfd2;
+  --color-sand-300: #d4cabb;
+
+  --color-ink-900: #1f2a2e;
+  --color-ink-700: #3b484d;
+  --color-ink-500: #66767c;
+
+  --color-note-50: #fbf4e2;
+  --color-note-200: #efd9a0;
+  --color-note-800: #6b5316;
+
+  --color-soft-50: #fbefed;
+  --color-soft-200: #ecc7c1;
+  --color-soft-800: #7a3b33;
+}
+
+html {
+  background: var(--color-sand-50);
+  color: var(--color-ink-900);
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  min-height: 100dvh;
+}
+
+@utility btn {
+  @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 py-3 text-center text-base font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600 disabled:cursor-not-allowed disabled:opacity-60;
+}
+@utility btn-primary {
+  @apply btn bg-brand-600 text-white hover:bg-brand-700;
+}
+@utility btn-secondary {
+  @apply btn border-2 border-brand-600 bg-white text-brand-700 hover:bg-brand-50;
+}
+@utility btn-ghost {
+  @apply btn text-brand-700 hover:bg-brand-50;
+}
+@utility btn-sm {
+  @apply min-h-10! px-3! py-2! text-sm!;
+}
+@utility btn-danger {
+  @apply btn border-2 border-soft-800 bg-white text-soft-800 hover:bg-soft-50;
+}
+@utility input {
+  @apply block min-h-12 w-full rounded-xl border border-sand-300 bg-white px-4 py-3 text-base text-ink-900 placeholder:text-ink-500/70 focus:border-brand-600 focus:outline-2 focus:outline-brand-600/30;
+}
+@layer components {
+  textarea.input {
+    @apply min-h-28;
+  }
+}
+@utility label {
+  @apply mb-1 block text-sm font-semibold text-ink-700;
+}
+@utility hint {
+  @apply mt-1 text-sm text-ink-500;
+}
+@utility card {
+  @apply rounded-2xl border border-sand-200 bg-white p-5 shadow-sm;
+}
+@utility badge {
+  @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold;
+}
+@utility section-title {
+  @apply font-serif text-2xl font-semibold text-ink-900 sm:text-3xl;
+}
+@utility prose-calm {
+  @apply max-w-prose text-ink-700;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  html,
+  body {
+    background: white !important;
+  }
+  .card {
+    box-shadow: none;
+    break-inside: avoid;
+  }
+}
