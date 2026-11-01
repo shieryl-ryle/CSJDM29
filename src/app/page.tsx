@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DeveloperNote } from "@/components/developer-note";
 import { DisclaimerBox, GraphicNotice } from "@/components/site";
 import { getPublicStats } from "@/lib/stats";
 
@@ -69,6 +70,9 @@ export default async function Home() {
           </ul>
           <p className="mt-4 text-sm"><Link className="underline" href="/about">Method and privacy</Link></p>
         </div>
+      </section>
+      <section className="mx-auto max-w-5xl px-4 pb-6">
+        <DeveloperNote />
       </section>
     </main>
   );

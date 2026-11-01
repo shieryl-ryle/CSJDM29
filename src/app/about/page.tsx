@@ -1,4 +1,5 @@
 import { DISCLAIMER_FULL, HASH_EXPLAINER, MATCH_NOTICE } from "@/lib/constants";
+import { DeveloperNote } from "@/components/developer-note";
 import { PageShell } from "@/components/site";
 
 export const metadata = { title: "Method and privacy" };
@@ -42,6 +43,7 @@ export default function About() {
         <h2 className="text-xl font-bold text-ink-900">Submission rules</h2>
         <p>Submit only information you possess or can identify the source of. Do not fabricate, alter or misrepresent evidence.</p>
       </div>
+      <DeveloperNote className="mt-8" />
     </PageShell>
   );
 }
