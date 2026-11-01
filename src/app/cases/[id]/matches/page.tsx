@@ -30,7 +30,7 @@ export default async function Matches({ params }: { params: Promise<{ id: string
         <p className="card mt-6">Submit the report to see possible matches. <Link className="underline" href={`/cases/${id}/edit`}>Continue report</Link></p>
       ) : matches.length === 0 ? (
         <div className="card mt-6">
-          <p className="text-ink-700">No records share enough characteristics at present. Matches are recalculated when new records are approved.</p>
+          <p className="text-ink-700">No records share enough characteristics at present. The registry may have no records yet. Matches are recalculated when new records are approved.</p>
           <form action={refreshMatches} className="mt-3">
             <input type="hidden" name="caseId" value={id} />
             <button className="btn-secondary btn-sm">Check again</button>

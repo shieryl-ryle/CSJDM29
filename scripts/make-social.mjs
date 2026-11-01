@@ -30,8 +30,8 @@ const SLIDES = [
   {
     file: "01-cover",
     kicker: "FREE EVIDENCE DATABASE",
-    title: "No USB drive needed.",
-    body: `<p class="lead">Upload and keep your evidence here.</p><p class="lead dim">For pet owners affected by the San Jose del Monte animal remains discovery.</p>`,
+    title: "Evidence in one place.",
+    body: `<p class="lead">Upload from your phone. Print it or download everything as a ZIP.</p><p class="lead dim">No USB drive needed. For pet owners affected by the San Jose del Monte animal remains discovery.</p>`,
     qr: true,
   },
   {
@@ -74,7 +74,7 @@ const SLIDES = [
     kicker: "PLEASE READ",
     title: "Notices",
     body: ul([
-      "The recovered-animals registry is still being compiled. Searches may show no results for now",
+      "The recovered-animals registry has no records yet, so searches show no results",
       "A potential match is an investigative lead only, not a confirmed identification",
       "Some records may contain images of deceased animals. They stay hidden until you choose to reveal them",
       "This platform makes no determination of legal responsibility",
@@ -89,6 +89,18 @@ const SLIDES = [
       <p class="lead dim">Requesting these organizations to take over administration:</p>
       <ul class="orgs"><li>Luna and Furry Siblings</li><li>Animal Kingdom Foundation</li><li>Philippine Animal Welfare Society (PAWS)</li></ul>
       <p class="small">Representatives: message this page or comment on this post. Access is given only after confirming through each organization's official channel.</p>`,
+  },
+  {
+    file: "07-registry-help",
+    kicker: "HELP NEEDED",
+    title: "Registry records",
+    body: `<p class="lead">The recovered-animals registry has no records yet.</p>` +
+      ul([
+        "Records are entered by authorized reviewers from documented sources",
+        "Entries can be text only: label name, weight, colors, markings, source",
+        "Photos are optional and stay hidden behind a reveal button",
+        "Organizations or volunteers with authorized access to source documentation: message this page to be set up as reviewers",
+      ]),
   },
 ];
 

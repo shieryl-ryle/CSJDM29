@@ -13,15 +13,15 @@ export default async function Home() {
     <main>
       <section className="bg-ink-900 text-white">
         <div className="mx-auto max-w-3xl px-4 pb-12 pt-12 sm:pt-16">
-          <h1 className="text-4xl font-bold leading-tight sm:text-5xl">Evidence preservation and pet identification registry</h1>
+          <h1 className="text-4xl font-bold leading-tight sm:text-5xl">Evidence in one place. Print it or download it as a ZIP.</h1>
           <p className="mt-5 max-w-xl text-lg text-white/80">
-            For pet owners affected by the San Jose del Monte animal remains discovery. Upload evidence, search documented recovered animals, and review potential matches.
+            Online evidence database for pet owners affected by the San Jose del Monte animal remains discovery. Upload files from your phone instead of collecting them on a USB drive.
           </p>
 
           <div className="mt-8 flex max-w-md flex-col gap-3">
             <Link href="/report" className="btn-primary text-lg">Report or register a pet</Link>
-            <Link href="/registry" className="btn btn-secondary text-lg">Search recovered pets</Link>
-            <Link href="/information" className="btn border-2 border-white/40 text-white hover:bg-white/10">Submit information</Link>
+            <Link href="/information" className="btn btn-secondary text-lg">Submit information</Link>
+            <Link href="/registry" className="btn border-2 border-white/40 text-white hover:bg-white/10">Search recovered pets</Link>
           </div>
 
           <DisclaimerBox className="mt-8 max-w-xl" />
@@ -37,6 +37,11 @@ export default async function Home() {
           <Stat label="Evidence files preserved" value={n(stats?.evidence_files)} />
         </dl>
         <p className="mt-3 text-xs text-ink-500">Counts reflect records on this platform only. They are not findings about any person or business.</p>
+        {stats?.recovered_documented === 0 && (
+          <p className="mt-4 border-l-4 border-brand-600 bg-sand-100 p-3 text-sm text-ink-900">
+            The recovered-animals registry has no records yet. Records are added by authorized reviewers from documented sources. Searching and potential matches work only after records are added.
+          </p>
+        )}
       </section>
 
       <section className="mx-auto max-w-5xl px-4 pb-10">
@@ -64,7 +69,7 @@ export default async function Home() {
           {[
             ["Preserve", "Receipts, messages and photos are stored unmodified with a SHA-256 hash."],
             ["Organize", "Case details form a timeline and an evidence index."],
-            ["Correlate", "Documented recovered animals are compared with owner-submitted details."],
+            ["Correlate", "Once the registry has records, documented recovered animals are compared with owner-submitted details."],
             ["Verify", "A human reviewer checks every record and every potential match."],
             ["Export", "Print case packages or download original files as a ZIP."],
           ].map(([t, d], i) => (

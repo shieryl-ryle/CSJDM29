@@ -112,7 +112,7 @@ export default async function Registry({ searchParams }: { searchParams: Promise
             </p>
             {hits.length === 0 ? (
               <p className="card mt-3 text-ink-700">
-                No records have these characteristics. Records are still being added. Try fewer filters or similar spellings.
+                {pets.length === 0 ? "The registry has no records yet. Records are added by authorized reviewers from documented sources." : "No records have these characteristics. Try fewer filters or similar spellings."}
               </p>
             ) : (
               <ul className="mt-3 grid gap-4 sm:grid-cols-2">
