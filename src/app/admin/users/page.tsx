@@ -70,7 +70,7 @@ export default async function UsersPage({ searchParams }: { searchParams: Promis
             </div>
             <form action={setUserRole} className="mt-2 flex flex-wrap gap-2">
               <input type="hidden" name="id" value={u.id} />
-              <select name="role" defaultValue={u.role} className="input max-w-52" aria-label={`Role for ${u.email}`}>
+              <select key={u.role} name="role" defaultValue={u.role} className="input max-w-52" aria-label={`Role for ${u.email}`}>
                 <option value="owner">Owner</option>
                 <option value="reviewer">Reviewer</option>
                 <option value="admin">Administrator</option>

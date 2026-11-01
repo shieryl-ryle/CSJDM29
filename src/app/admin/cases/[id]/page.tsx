@@ -64,11 +64,18 @@ export default async function AdminCase({ params }: { params: Promise<{ id: stri
         <h2 className="font-semibold">Review status</h2>
         <form action={setCaseStatus} className="mt-2 flex flex-wrap items-center gap-2">
           <input type="hidden" name="id" value={id} />
-          <select name="status" defaultValue={kase.status === "draft" ? "submitted" : kase.status} className="input max-w-xs">
+          <select key={kase.status} name="status" defaultValue={kase.status === "draft" ? "submitted" : kase.status} className="input max-w-xs">
             {["submitted", "under_review", "needs_info", "closed"].map((s) => <option key={s} value={s}>{CASE_STATUS_LABEL[s]}</option>)}
           </select>
           <button className="btn-primary btn-sm">Update</button>
         </form>
+        <dl className="mt-3 space-y-1 text-xs text-ink-700">
+          <div><dt className="inline font-bold">Submitted, awaiting review:</dt> <dd className="inline">received, not yet opened by a reviewer.</dd></div>
+          <div><dt className="inline font-bold">Under review:</dt> <dd className="inline">a reviewer is checking the case.</dd></div>
+          <div><dt className="inline font-bold">More information requested:</dt> <dd className="inline">waiting on the owner. Contact the owner using the contact details below.</dd></div>
+          <div><dt className="inline font-bold">Closed:</dt> <dd className="inline">review finished.</dd></div>
+        </dl>
+        <p className="mt-2 text-xs text-ink-500">The owner sees this status. Owner cases are never published and have no approval step. Approve and Publish apply only to recovered-animal records.</p>
       </section>
 
       <section>
@@ -79,7 +86,7 @@ export default async function AdminCase({ params }: { params: Promise<{ id: stri
               <MatchCard key={match.id} tier={match.tier} pet={pet} reviewStatus={match.review_status} comparisons={match.comparisons} reviewerNote={match.reviewer_note}>
                 <form action={reviewMatch} className="mt-3 space-y-2 rounded-xl bg-sand-50 p-3">
                   <input type="hidden" name="id" value={match.id} />
-                  <select name="review_status" defaultValue={match.review_status} className="input">
+                  <select key={match.review_status} name="review_status" defaultValue={match.review_status} className="input">
                     {Object.entries(MATCH_REVIEW_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                   </select>
                   <input name="note" defaultValue={match.reviewer_note ?? ""} placeholder="Reviewer note (optional)" className="input" maxLength={2000} />

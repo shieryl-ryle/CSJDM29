@@ -41,7 +41,7 @@ export default async function AdminMatches({ searchParams }: { searchParams: Pro
               <p className="mt-3 text-sm">Owner case: <Link className="underline" href={`/admin/cases/${m.case_id}`}>{c?.case_number} · {c?.pet_name ?? "Unnamed"}</Link></p>
               <form action={reviewMatch} className="mt-3 space-y-2 rounded-xl bg-sand-50 p-3">
                 <input type="hidden" name="id" value={m.id} />
-                <select name="review_status" defaultValue={m.review_status} className="input">
+                <select key={m.review_status} name="review_status" defaultValue={m.review_status} className="input">
                   {Object.entries(MATCH_REVIEW_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
                 </select>
                 <input name="note" defaultValue={m.reviewer_note ?? ""} placeholder="Reviewer note (optional)" className="input" maxLength={2000} />

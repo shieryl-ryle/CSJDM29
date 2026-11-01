@@ -41,7 +41,7 @@ export default async function AdminWitness() {
             )}
             <form action={updateWitness} className="mt-4 flex flex-col gap-2 rounded-xl bg-sand-50 p-3 sm:flex-row">
               <input type="hidden" name="id" value={w.id} />
-              <select name="status" defaultValue={w.status} className="input sm:max-w-44">
+              <select key={w.status} name="status" defaultValue={w.status} className="input sm:max-w-44">
                 {["new", "reviewing", "actioned", "dismissed"].map((s) => <option key={s} value={s}>{s}</option>)}
               </select>
               <input name="note" defaultValue={w.reviewer_note ?? ""} placeholder="Reviewer note" className="input" maxLength={3000} />
