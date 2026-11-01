@@ -32,11 +32,7 @@ export function DeveloperNote({ className = "" }: { className?: string }) {
         <ProgrammerIcon />
         <div className="space-y-2 text-ink-900">
           <p className="font-semibold">&ldquo;Condolences to the bereaved furparents.&rdquo;</p>
-          <p>
-            &ldquo;I am not affiliated with any organization. I am just a furmom who sympathizes with the victims.
-            <br />
-            Love, Chilli&rdquo;
-          </p>
+          <p>&ldquo;I am not affiliated with any organization. I am just a furmom who sympathizes with the victims.&rdquo;</p>
         </div>
       </div>
     </section>
