@@ -33,7 +33,6 @@ export default function About() {
           <li>Government IDs and payment account information</li>
           <li>Private Messenger conversations and veterinary documents</li>
           <li>Unredacted receipts</li>
-          <li>Aftercare provider names (visible to reviewers only)</li>
           <li>Reviewer notes</li>
         </ul>
 
