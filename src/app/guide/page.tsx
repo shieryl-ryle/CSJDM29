@@ -30,7 +30,7 @@ export default function Guide() {
   return (
     <PageShell narrow>
       <h1 className="section-title">How to use this site</h1>
-      <p className="prose-plain mt-3">Steps for pet owners and for anyone with information. Works on a phone. Entries save automatically.</p>
+      <p className="prose-plain mt-3">Instructions for pet owners and for people submitting information. Entries are saved as they are typed.</p>
 
       <nav aria-label="Guide sections" className="card mt-5">
         <p className="text-xs font-bold uppercase tracking-wide text-ink-500">Contents</p>
@@ -56,13 +56,13 @@ export default function Guide() {
 
         <ol className="mt-6 space-y-5">
           <Step n={1} title="Create an account">
-            <p>Select <strong>Report a pet</strong>, then <strong>Create account</strong>. Use an email address you can access. Write the password down. Only the account holder and authorized reviewers can see uploaded files.</p>
+            <p>Select <strong>Report a pet</strong>, then <strong>Create account</strong>. Use an email address you can access. Only the account holder and authorized reviewers can see uploaded files.</p>
           </Step>
           <Step n={2} title="Start the report">
             <p>Select <strong>Start report</strong>. A draft is created and saved after every change. The top bar shows <em>All changes saved</em>. If the connection drops, entries are kept on the device and sent when it returns.</p>
           </Step>
           <Step n={3} title="Pet details">
-            <p>Enter what you know. Only the pet name and species are required to submit. Describe markings such as scars, a missing tooth, a collar, surgery, or tail and ear features. Enter the weight and the date it was recorded if known.</p>
+            <p>Enter the details available. Only the pet name and species are required to submit. Describe markings such as scars, a missing tooth, a collar, surgery, or tail and ear features. Enter the weight and the date it was recorded if known.</p>
             <p>Upload clear photos of the pet: face, full body, and any markings. Use <strong>Take a photo</strong> or <strong>Choose from gallery or files</strong>.</p>
           </Step>
           <Step n={4} title="Aftercare details">

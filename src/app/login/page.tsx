@@ -10,7 +10,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   return (
     <PageShell narrow>
       <h1 className="section-title mb-2">Sign in</h1>
-      <p className="mb-5 text-ink-700">Accounts keep uploaded evidence private and allow a report to be completed later.</p>
+      <p className="mb-5 text-ink-700">An account is required to store evidence privately and to continue a saved report.</p>
       {sp.error === "link" && <p className="mb-4 rounded-xl bg-soft-50 p-3 text-sm text-soft-800">That link has expired. Sign in again.</p>}
       <AuthForm mode="login" action={signIn} next={next} />
     </PageShell>

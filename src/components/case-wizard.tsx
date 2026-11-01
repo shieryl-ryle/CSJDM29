@@ -249,10 +249,10 @@ export function CaseWizard({
               {date("death_date", "Date of death")}
               {date("surrendered_on", "Date surrendered for aftercare")}
             </div>
-            {txt("location", "Location", { hint: "Town or barangay where your pet was handed over." })}
+            {txt("location", "Location", { hint: "Town or barangay where the pet was handed over." })}
             {txt("vet_clinic", "Veterinary clinic (if any)")}
             <section className="card">
-              <h2 className="font-serif text-lg font-semibold">Photos of your pet while alive</h2>
+              <h2 className="font-serif text-lg font-semibold">Photos of the pet while alive</h2>
               <p className="hint mb-3">Upload clear photos: face, full body, and any markings.</p>
               {slots.petPhotos}
             </section>

@@ -15,7 +15,7 @@ export default async function Report({ searchParams }: { searchParams: Promise<{
   return (
     <PageShell narrow>
       <h1 className="section-title">Report or register a pet</h1>
-      <p className="prose-plain mt-3">Record pet details, aftercare details and evidence. Entries save automatically and can be completed later. <Link className="underline" href="/guide">Step-by-step guide</Link></p>
+      <p className="prose-plain mt-3">Record pet details, aftercare details and evidence. Entries are saved as they are typed and can be completed later. <Link className="underline" href="/guide">Step-by-step guide</Link></p>
 
       {sp.error === "draft" && <p role="alert" className="mt-4 border-l-4 border-soft-800 bg-soft-50 p-3 text-sm text-soft-800">Three unfinished reports already exist on this account. Finish or submit one before starting another.</p>}
       {sp.error === "limit" && <p role="alert" className="mt-4 border-l-4 border-soft-800 bg-soft-50 p-3 text-sm text-soft-800">This account has reached the limit of 10 reports. Contact a reviewer if more are needed.</p>}
@@ -25,8 +25,8 @@ export default async function Report({ searchParams }: { searchParams: Promise<{
           <>
             <form action={current} className="card">
               <h2 className="text-xl font-bold">Current case</h2>
-              <p className="mt-1 text-sm text-ink-700">Pet details, aftercare information and evidence. Documented recovered animals with characteristics in common are listed after submission.</p>
-              <button className="btn-primary mt-4 w-full">Start report</button>
+              <p className="mt-1 text-sm text-ink-700">Pet details, aftercare information and evidence. Records with characteristics in common are listed after submission.</p>
+              <button className="btn-primary mt-4 w-full">Start a report</button>
             </form>
             <form action={historical} className="card">
               <h2 className="text-xl font-bold">Previous incident</h2>
@@ -38,7 +38,7 @@ export default async function Report({ searchParams }: { searchParams: Promise<{
         ) : (
           <div className="card">
             <h2 className="text-xl font-bold">Account required</h2>
-            <p className="mt-1 text-sm text-ink-700">An account keeps evidence private. Only the account holder and authorized reviewers can access uploaded files.</p>
+            <p className="mt-1 text-sm text-ink-700">An account is required to store evidence privately. Uploaded files are visible only to the account holder and authorized reviewers.</p>
             <div className="mt-4 flex flex-col gap-2">
               <Link href="/signup?next=/report" className="btn-primary">Create account</Link>
               <Link href="/login?next=/report" className="btn-secondary">Sign in</Link>

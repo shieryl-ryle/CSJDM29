@@ -29,42 +29,42 @@ const ol = (items) => `<ol>${items.map(([t, d]) => `<li><b>${t}</b><span>${d}</s
 const SLIDES = [
   {
     file: "01-cover",
-    kicker: "FREE EVIDENCE DATABASE",
-    title: "Evidence in one place.",
-    body: `<p class="lead">Upload from your phone. Print it or download everything as a ZIP.</p><p class="lead dim">No USB drive needed. For pet owners affected by the San Jose del Monte animal remains discovery.</p>`,
+    kicker: "EVIDENCE DATABASE",
+    title: "Online evidence storage",
+    body: `<p class="lead">For pet owners affected by the San Jose del Monte animal remains discovery.</p><p class="lead dim">Evidence files are uploaded from a phone. A case can be printed or exported as a ZIP. Replaces collecting evidence on USB drives.</p>`,
     qr: true,
   },
   {
     file: "02-how-to-use",
-    kicker: "HOW TO USE IT",
+    kicker: "PROCEDURE",
     title: "Four steps",
     body: ol([
-      ["Create an account", "Email and password. Keeps your files private."],
-      ["Start a report", "Enter pet and aftercare details. Entries save automatically."],
+      ["Create an account", "Email and password. Required to store files privately."],
+      ["Start a report", "Enter pet and aftercare details. Entries are saved as they are typed."],
       ["Upload evidence", "Photos, receipts, screenshots of messages, certificates. Do not edit or crop."],
-      ["Submit", "Then add more evidence at any time."],
+      ["Submit", "Evidence can be added after submission."],
     ]),
   },
   {
     file: "03-what-you-can-do",
-    kicker: "WHAT YOU CAN DO",
-    title: "From your phone",
+    kicker: "FUNCTIONS",
+    title: "What the site does",
     body: ul([
-      "Upload receipts, messages, photos, certificates and veterinary records",
-      "Keep everything in one private place with a timeline and evidence index",
-      "Print your case package or download all files as a ZIP when authorities ask",
-      "Report an earlier incident",
-      "Submit information anonymously, no account needed",
+      "Stores receipts, messages, photos, certificates and veterinary records",
+      "Builds a timeline and an evidence index for each case",
+      "Exports a case as a print-ready package or a ZIP of the original files",
+      "Accepts reports of earlier incidents",
+      "Accepts information anonymously, no account needed",
     ]),
   },
   {
     file: "04-protected",
-    kicker: "YOUR FILES",
-    title: "How they are protected",
+    kicker: "FILE HANDLING",
+    title: "Storage and access",
     body: ul([
-      "Private by default. Only you and authorized reviewers can see them",
+      "Private by default. Visible only to the uploader and authorized reviewers",
       "Originals are never changed",
-      "Each file gets a SHA-256 hash so any change can be detected",
+      "A SHA-256 hash is recorded for each file so a change can be detected",
       "Contact details are never published",
       "Limits: 50 MB per file, 300 MB per account",
     ]),
@@ -83,8 +83,8 @@ const SLIDES = [
   },
   {
     file: "06-handover",
-    kicker: "ADMINISTRATION HANDOVER",
-    title: "Requesting help",
+    kicker: "ADMINISTRATION",
+    title: "Handover request",
     body: `<p class="lead">This platform was built independently and is not run by any organization.</p>
       <p class="lead dim">Requesting these organizations to take over administration:</p>
       <ul class="orgs"><li>Luna and Furry Siblings</li><li>Animal Kingdom Foundation</li><li>Philippine Animal Welfare Society (PAWS)</li></ul>
@@ -92,7 +92,7 @@ const SLIDES = [
   },
   {
     file: "07-registry-help",
-    kicker: "HELP NEEDED",
+    kicker: "REQUEST",
     title: "Registry records",
     body: `<p class="lead">The recovered-animals registry has no records yet.</p>` +
       ul([

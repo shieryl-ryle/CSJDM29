@@ -10,7 +10,7 @@ export default function About() {
       <h1 className="section-title">Method and privacy</h1>
       <div className="prose-plain mt-4 space-y-4">
         <p>
-          This is an independent community platform. It stores owner evidence, keeps a registry of documented recovered animals, and lists characteristics in common between the two. People review every record and every potential match.
+          This is an independent community platform. It stores owner evidence, holds a registry of documented recovered animals, and lists characteristics in common between the two. People review every record and every potential match.
         </p>
         <p className="border-l-4 border-brand-600 bg-sand-100 p-4 text-ink-900">{DISCLAIMER_FULL}</p>
 

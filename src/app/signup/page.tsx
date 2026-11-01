@@ -11,7 +11,7 @@ export default async function SignupPage({ searchParams }: { searchParams: Promi
     <PageShell narrow>
       <h1 className="section-title mb-2">Create account</h1>
       <p className="mb-5 text-ink-700">
-        An account keeps evidence private. Only the account holder and authorized reviewers can see uploaded files. The email address is used only to contact you about your case.
+        An account is required to store evidence privately. Uploaded files are visible only to the account holder and authorized reviewers. The email address is used only for contact about the case.
       </p>
       <AuthForm mode="signup" action={signUp} next={next} />
     </PageShell>

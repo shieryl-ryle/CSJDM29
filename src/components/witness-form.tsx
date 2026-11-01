@@ -78,7 +78,7 @@ export function WitnessForm() {
       <label className="flex items-start gap-3 rounded-xl border border-sand-300 bg-white p-4">
         <input type="checkbox" name="anonymous" className="mt-1 size-6 shrink-0" checked={anonymous} onChange={(e) => setAnonymous(e.target.checked)} />
         <span className="text-sm text-ink-700">
-          <strong>Submit anonymously.</strong> Your account is not stored with this submission.
+          <strong>Submit anonymously.</strong> The account is not stored with this submission.
         </span>
       </label>
       <div>

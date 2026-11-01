@@ -19,7 +19,7 @@ export function AuthForm({
       <input type="hidden" name="next" value={next} />
       {mode === "signup" && (
         <div>
-          <label className="label" htmlFor="display_name">Your first name (optional)</label>
+          <label className="label" htmlFor="display_name">First name (optional)</label>
           <input id="display_name" name="display_name" className="input" autoComplete="given-name" />
         </div>
       )}
