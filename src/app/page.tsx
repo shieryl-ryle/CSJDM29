@@ -39,6 +39,25 @@ export default async function Home() {
         <p className="mt-3 text-xs text-ink-500">Counts reflect records on this platform only. They are not findings about any person or business.</p>
       </section>
 
+      <section className="mx-auto max-w-5xl px-4 pb-10">
+        <h2 className="section-title">How to use this site</h2>
+        <ol className="mt-5 grid gap-4 sm:grid-cols-4">
+          {[
+            ["Create an account", "An account keeps uploaded evidence private."],
+            ["Start a report", "Enter pet and aftercare details. Entries save automatically."],
+            ["Upload evidence", "Photos, receipts, messages, certificates. Originals are never changed."],
+            ["Submit", "Then add more evidence, print the package or download a ZIP when authorities ask."],
+          ].map(([t, d], i) => (
+            <li key={t} className="card">
+              <p className="text-sm font-bold text-brand-700">Step {i + 1}</p>
+              <p className="font-bold">{t}</p>
+              <p className="mt-1 text-sm text-ink-700">{d}</p>
+            </li>
+          ))}
+        </ol>
+        <p className="mt-4"><Link href="/guide" className="btn-secondary">Open the full guide</Link></p>
+      </section>
+
       <section className="mx-auto max-w-5xl px-4 pb-6">
         <h2 className="section-title">Process</h2>
         <ol className="mt-5 grid gap-4 sm:grid-cols-5">

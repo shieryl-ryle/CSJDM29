@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { requireReviewer } from "@/lib/auth";
+import { requireAdmin, requireReviewer } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { parseTimestamp } from "@/lib/format";
@@ -295,4 +295,32 @@ export async function createCandidateFromVideo(form: FormData) {
     .single();
   if (error || !data) throw new Error(error?.message ?? "Could not create candidate");
   redirect(`/admin/pets/${data.id}`);
+}
+
+// ---------------------------------------------------------------------------
+// Users and roles (administrators only)
+// ---------------------------------------------------------------------------
+export async function setUserRole(form: FormData) {
+  const { user, profile } = await requireAdmin();
+  const target = uuid(form.get("id"));
+  const role = oneOf(str(form, "role"), ["owner", "reviewer", "admin"], "owner");
+  const admin = createAdminClient();
+  const { data: cur } = await admin.from("profiles").select("role").eq("id", target).maybeSingle();
+  if (!cur || cur.role === role) return;
+  if (cur.role === "admin" && role !== "admin") {
+    const { count } = await admin.from("profiles").select("id", { count: "exact", head: true }).eq("role", "admin");
+    if ((count ?? 0) <= 1) throw new Error("At least one administrator is required");
+  }
+  const { error } = await admin.from("profiles").update({ role }).eq("id", target);
+  if (error) throw new Error(error.message);
+  await logAudit({
+    actorId: user.id,
+    actorRole: profile.role,
+    action: "profiles.role_change",
+    entityType: "profiles",
+    entityId: target,
+    previous: { role: cur.role },
+    next: { role },
+  });
+  revalidatePath("/admin/users");
 }

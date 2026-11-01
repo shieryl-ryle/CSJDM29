@@ -27,6 +27,7 @@ export async function POST(req: Request) {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Sign in required" }, { status: 401 });
   const reviewer = isReviewerRole(session.profile.role);
+  const isAdmin = session.profile.role === "admin";
 
   const form = await req.formData();
   const scope = String(form.get("scope") ?? "selected");
@@ -45,6 +46,10 @@ export async function POST(req: Request) {
     caseIds = caseIds.slice(0, MAX_CASES);
     const { data } = await sb.from("cases").select("*").in("id", caseIds).order("case_number");
     cases = (data ?? []) as CaseRow[];
+  }
+  // Bulk export of many cases or information submissions is limited to administrators
+  if (reviewer && !isAdmin && (scope === "all" || cases.length > 1 || form.get("witness") === "1")) {
+    return NextResponse.json({ error: "Administrator access required for bulk export" }, { status: 403 });
   }
   if (cases.length === 0 && !includeWitness) return NextResponse.json({ error: "Nothing to export" }, { status: 404 });
 

@@ -46,3 +46,32 @@ export async function signOut() {
   await supabase.auth.signOut();
   redirect("/");
 }
+
+const emailOnly = z.object({ email: z.string().trim().toLowerCase().email("Enter a valid email address") });
+
+/** Sends a reset link. The response is the same whether or not the address has an account. */
+export async function requestPasswordReset(_prev: AuthState, form: FormData): Promise<AuthState> {
+  const parsed = emailOnly.safeParse({ email: form.get("email") });
+  if (!parsed.success) return { error: parsed.error.issues[0].message };
+  const site = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const supabase = await createClient();
+  await supabase.auth.resetPasswordForEmail(parsed.data.email, {
+    redirectTo: `${site}/auth/callback?next=${encodeURIComponent("/account/reset")}`,
+  });
+  return { message: "If an account exists for this email address, a reset link has been sent. Check the inbox and spam folder." };
+}
+
+export async function updatePassword(_prev: AuthState, form: FormData): Promise<AuthState> {
+  const password = String(form.get("password") ?? "");
+  const confirm = String(form.get("confirm") ?? "");
+  if (password.length < 8) return { error: "Password must be at least 8 characters" };
+  if (password !== confirm) return { error: "The two passwords do not match" };
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { error: "The reset link has expired. Request a new one." };
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) return { error: error.message };
+  redirect("/cases");
+}

@@ -3,7 +3,7 @@ import { EvidencePackage } from "@/components/evidence-package";
 import { PrintButton } from "@/components/print-button";
 import { PageShell } from "@/components/site";
 import { logAudit } from "@/lib/audit";
-import { requireReviewer } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth";
 import { loadCase } from "@/lib/case-data";
 
 export const metadata = { title: "Print case packages" };
@@ -13,7 +13,7 @@ const MAX = 40;
 
 export default async function AdminPrint({ searchParams }: { searchParams: Promise<{ caseId?: string | string[]; contact?: string }> }) {
   const sp = await searchParams;
-  const { supabase, user, profile } = await requireReviewer();
+  const { supabase, user, profile } = await requireAdmin();
   const ids = (Array.isArray(sp.caseId) ? sp.caseId : sp.caseId ? [sp.caseId] : []).filter((s) => /^[0-9a-f-]{36}$/i.test(s)).slice(0, MAX);
   const withContact = sp.contact === "1";
   const loaded = (await Promise.all(ids.map((id) => loadCase(supabase, id)))).filter((d): d is NonNullable<typeof d> => !!d);

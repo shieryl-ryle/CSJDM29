@@ -31,7 +31,7 @@ export default async function CasePage({ params, searchParams }: { params: Promi
       {sp.submitted && (
         <div role="status" className="mb-5 rounded-2xl border border-brand-200 bg-brand-50 p-4 text-brand-800">
           <p className="font-semibold">Report submitted.</p>
-          <p className="text-sm">A reviewer will review it. Evidence can be added below at any time.</p>
+          <p className="text-sm">A reviewer will review it. Evidence can be added below at any time. <Link className="underline" href="/guide#after">What happens next</Link></p>
         </div>
       )}
       <div className="flex flex-wrap items-center justify-between gap-2">

@@ -37,6 +37,7 @@ export function AuthForm({
       <button className="btn-primary w-full" disabled={pending}>
         {pending ? "Working…" : mode === "login" ? "Sign in" : "Create account"}
       </button>
+      {mode === "login" && <p className="text-center text-sm"><Link className="underline" href="/forgot-password">Forgot password</Link></p>}
       <p className="text-center text-sm text-ink-500">
         {mode === "login" ? (
           <>New here? <Link className="underline" href={`/signup?next=${encodeURIComponent(next)}`}>Create an account</Link></>

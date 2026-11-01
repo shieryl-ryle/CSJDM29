@@ -11,9 +11,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     ["/admin/videos", "Source videos"],
     ["/admin/matches", "Potential matches"],
     ["/admin/witness", "Information received"],
-    ["/admin/export", "Export and print"],
     ["/admin/audit", "Audit log"],
   ];
+  if (profile.role === "admin") {
+    links.splice(links.length - 1, 0, ["/admin/export", "Export and print"], ["/admin/users", "Users"]);
+  }
+  links.push(["/admin/guide", "Guide"]);
   return (
     <PageShell>
       <div className="no-print mb-6 rounded-2xl border border-sand-200 bg-white p-3">

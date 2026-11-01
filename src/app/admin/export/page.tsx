@@ -1,12 +1,12 @@
 import { ExportPicker, type ExportRow } from "@/components/export-picker";
-import { requireReviewer } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth";
 import { CASE_STATUS_LABEL } from "@/lib/constants";
 
 export const metadata = { title: "Export and print" };
 export const dynamic = "force-dynamic";
 
 export default async function AdminExport() {
-  const { supabase } = await requireReviewer();
+  const { supabase } = await requireAdmin();
   const [{ data: cases }, { data: files }] = await Promise.all([
     supabase.from("cases").select("id, case_number, pet_name, status").neq("status", "draft").order("case_number").limit(500),
     supabase.from("evidence").select("case_id, witness_submission_id, size_bytes").limit(20000),

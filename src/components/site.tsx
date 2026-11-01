@@ -20,6 +20,7 @@ export async function SiteHeader() {
           <Link href="/registry" className="py-2 hover:underline">Recovered pets</Link>
           <Link href="/report" className="py-2 hover:underline">Report a pet</Link>
           <Link href="/information" className="py-2 hover:underline">Submit information</Link>
+          <Link href="/guide" className="py-2 hover:underline">Guide</Link>
           <Link href="/about" className="py-2 hover:underline">About</Link>
           {session ? (
             <>

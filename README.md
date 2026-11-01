@@ -56,7 +56,7 @@ The buckets are created with a 50 MB per-file cap (the Supabase **free plan maxi
    update public.profiles set role = 'admin'
    where id = (select id from auth.users where email = 'you@example.com');
    ```
-   Use `'reviewer'` for reviewers. (Today `reviewer` and `admin` have the same permissions; `admin` is reserved for future admin-only actions.) Roles can **only** be changed this way, the app (and the database) will not let a user change their own role.
+   Reviewers and administrators are managed afterwards in **Review > Users**. Reviewers cannot bulk-export; administrators can. Roles can **only** be changed this way, the app (and the database) will not let a user change their own role.
 3. Reload: a **Review** link appears in the header.
 
 ### 1.7 Run locally
@@ -89,6 +89,9 @@ npm run typecheck && npm run build
 ---
 
 ## 3. What is where
+
+Handover to another organization: see [docs/HANDOVER.md](docs/HANDOVER.md). In-app guides: /guide (public) and /admin/guide (reviewers).
+
 
 | Area | Location |
 |---|---|

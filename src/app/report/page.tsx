@@ -15,7 +15,7 @@ export default async function Report({ searchParams }: { searchParams: Promise<{
   return (
     <PageShell narrow>
       <h1 className="section-title">Report or register a pet</h1>
-      <p className="prose-plain mt-3">Record pet details, aftercare details and evidence. Entries save automatically and can be completed later.</p>
+      <p className="prose-plain mt-3">Record pet details, aftercare details and evidence. Entries save automatically and can be completed later. <Link className="underline" href="/guide">Step-by-step guide</Link></p>
 
       {sp.error === "draft" && <p role="alert" className="mt-4 border-l-4 border-soft-800 bg-soft-50 p-3 text-sm text-soft-800">Three unfinished reports already exist on this account. Finish or submit one before starting another.</p>}
       {sp.error === "limit" && <p role="alert" className="mt-4 border-l-4 border-soft-800 bg-soft-50 p-3 text-sm text-soft-800">This account has reached the limit of 10 reports. Contact a reviewer if more are needed.</p>}
