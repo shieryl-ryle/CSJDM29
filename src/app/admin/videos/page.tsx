@@ -16,8 +16,8 @@ export default async function Videos() {
     <div className="space-y-8">
       <div>
         <h1 className="section-title">Source videos</h1>
-        <p className="prose-calm mt-2">
-          Upload only videos you are authorized to use. The original is preserved untouched and fingerprinted; people then review each candidate animal. Nothing is scraped from social media.
+        <p className="prose-plain mt-2">
+          Upload only videos you are authorized to use. The original is stored unmodified with a SHA-256 hash. A reviewer then reviews each candidate animal. Nothing is collected from social media automatically.
         </p>
       </div>
 

@@ -44,7 +44,7 @@ export default async function VideoPage({ params }: { params: Promise<{ id: stri
           // eslint-disable-next-line jsx-a11y/media-has-caption
           <video src={url} controls preload="metadata" playsInline className="w-full rounded-xl bg-black" />
         ) : (
-          <p className="text-sm text-ink-500">No file uploaded — external reference only.</p>
+          <p className="text-sm text-ink-500">No file uploaded. External reference only.</p>
         )}
         {v.sha256 && (
           <div className="text-xs">

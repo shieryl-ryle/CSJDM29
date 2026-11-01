@@ -21,16 +21,16 @@ export default async function Matches({ params }: { params: Promise<{ id: string
     <PageShell narrow>
       <p className="text-sm"><Link href={`/cases/${id}`} className="underline">← {kase.pet_name || "My case"}</Link></p>
       <h1 className="section-title mt-2">Possible matches</h1>
-      <p className="prose-calm mt-2">
-        These are documented recovered-animal records that share some characteristics with what you told us. {MATCH_NOTICE} A reviewer will also look at each one.
+      <p className="prose-plain mt-2">
+        These documented recovered-animal records share characteristics with the details submitted. {MATCH_NOTICE} A reviewer also reviews each one.
       </p>
       <GraphicNotice className="mt-4" />
 
       {kase.status === "draft" ? (
-        <p className="card mt-6">Submit your report to see possible matches. <Link className="underline" href={`/cases/${id}/edit`}>Continue my report</Link></p>
+        <p className="card mt-6">Submit the report to see possible matches. <Link className="underline" href={`/cases/${id}/edit`}>Continue report</Link></p>
       ) : matches.length === 0 ? (
         <div className="card mt-6">
-          <p className="text-ink-700">No records share enough characteristics yet. More animals are still being documented — we’ll check again as new records are approved.</p>
+          <p className="text-ink-700">No records share enough characteristics at present. Matches are recalculated when new records are approved.</p>
           <form action={refreshMatches} className="mt-3">
             <input type="hidden" name="caseId" value={id} />
             <button className="btn-secondary btn-sm">Check again</button>

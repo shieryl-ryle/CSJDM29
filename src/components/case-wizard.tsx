@@ -37,7 +37,7 @@ export function CaseWizard({
   slots: { petPhotos: React.ReactNode; evidence: React.ReactNode };
 }) {
   const historical = initial.case_kind === "historical";
-  const steps = historical ? ["What happened", "Evidence", "Contact & submit"] : ["Your pet", "Aftercare", "Evidence", "Contact & submit"];
+  const steps = historical ? ["What happened", "Evidence", "Contact and submit"] : ["Pet details", "Aftercare", "Evidence", "Contact and submit"];
   const storageKey = `csjdm:draft:${initial.id}`;
 
   const [values, setValues] = useState<Values>(() => toValues(initial));
@@ -140,10 +140,10 @@ export function CaseWizard({
       const res = await submitCase(initial.id, valuesRef.current);
       // on success the action redirects; if we are here, something needs attention
       if (res && !res.ok) {
-        if (res.missing?.length) setSubmitMsg(`Please complete: ${res.missing.join(", ")}.`);
+        if (res.missing?.length) setSubmitMsg(`Complete: ${res.missing.join(", ")}.`);
         else if (res.errors) {
           setErrors(res.errors);
-          setSubmitMsg("Please check the highlighted fields.");
+          setSubmitMsg("Check the highlighted fields.");
         } else setSubmitMsg(res.message ?? "Could not submit.");
       }
     });
@@ -196,7 +196,7 @@ export function CaseWizard({
   );
 
   const saveLabel = useMemo(
-    () => ({ idle: "", dirty: "Unsaved changes…", saving: "Saving…", saved: "All changes saved ✓", error: "Offline — kept on this device, will retry" })[saveState],
+    () => ({ idle: "", dirty: "Unsaved changes…", saving: "Saving…", saved: "All changes saved ✓", error: "Offline. Entries are kept on this device and will retry" })[saveState],
     [saveState],
   );
 
@@ -214,21 +214,21 @@ export function CaseWizard({
       </div>
 
       <div className="mt-6 space-y-6">
-        {stepName === "Your pet" && (
+        {stepName === "Pet details" && (
           <>
-            <p className="prose-calm">We’re so sorry you’re going through this. Share what you can — you can come back at any time. Everything saves automatically.</p>
-            {txt("pet_name", "Pet’s name", { required: true, autoComplete: "off" })}
+            <p className="prose-plain">Entries save automatically. Incomplete reports can be finished later.</p>
+            {txt("pet_name", "Pet name", { required: true, autoComplete: "off" })}
             {choice("species", "Species", [["dog", "Dog"], ["cat", "Cat"], ["other", "Other"]])}
             {txt("breed", "Breed (if known)")}
             {choice("sex", "Sex", [["male", "Male"], ["female", "Female"], ["unknown", "Not sure"]])}
             {txt("age_text", "Age", { placeholder: "e.g. 6 years, 8 months" })}
             <div className="grid gap-4 sm:grid-cols-2">
-              {txt("primary_color", "Main colour", { placeholder: "e.g. white" })}
-              {txt("secondary_colors", "Other colours", { placeholder: "e.g. brown, black", hint: "Separate with commas." })}
+              {txt("primary_color", "Main color", { placeholder: "e.g. white" })}
+              {txt("secondary_colors", "Other colors", { placeholder: "e.g. brown, black", hint: "Separate with commas." })}
             </div>
             {area("distinctive_markings", "Distinctive markings", { placeholder: "e.g. brown patch over left eye", rows: 3 })}
             <div>
-              {area("distinguishing_description", "Describe anything that could help distinguish your pet", {
+              {area("distinguishing_description", "Describe anything that could help distinguish the pet", {
                 rows: 4,
                 hint: "For example: a scar, a missing tooth, an unusual coat marking, a collar, surgery, a deformity, a distinctive ear, or tail characteristics.",
               })}
@@ -246,14 +246,14 @@ export function CaseWizard({
             </div>
             {date("weight_recorded_on", "Date that weight was recorded")}
             <div className="grid gap-4 sm:grid-cols-2">
-              {date("death_date", "Date your pet passed away")}
+              {date("death_date", "Date of death")}
               {date("surrendered_on", "Date surrendered for aftercare")}
             </div>
             {txt("location", "Location", { hint: "Town or barangay where your pet was handed over." })}
             {txt("vet_clinic", "Veterinary clinic (if any)")}
             <section className="card">
               <h2 className="font-serif text-lg font-semibold">Photos of your pet while alive</h2>
-              <p className="hint mb-3">Several clear photos help most — face, full body, and any markings.</p>
+              <p className="hint mb-3">Upload clear photos: face, full body, and any markings.</p>
               {slots.petPhotos}
             </section>
           </>
@@ -261,44 +261,44 @@ export function CaseWizard({
 
         {stepName === "Aftercare" && (
           <>
-            <p className="prose-calm">About the cremation or burial service you arranged. Your answers here are private.</p>
+            <p className="prose-plain">Details of the cremation or burial service. Private.</p>
             <div>
               {txt("provider_name", "Aftercare provider")}
-              <p className="hint">Private. We never publish the provider’s name; authorized reviewers can use it to link related cases.</p>
+              <p className="hint">Private. The provider name is never published. Authorized reviewers use it to link related cases.</p>
             </div>
             {select("service_type", "Service you purchased", SERVICE_TYPES)}
-            {values.service_type === "other" && txt("service_other", "Please describe the service")}
-            {date("collected_on", "Date your pet was collected / handed over")}
+            {values.service_type === "other" && txt("service_other", "Describe the service")}
+            {date("collected_on", "Date collected or handed over")}
             <div>
-              {txt("collection_method", "How was your pet collected?", { placeholder: "e.g. picked up from my home" })}
+              {txt("collection_method", "Collection method", { placeholder: "e.g. picked up from my home" })}
             </div>
             {txt("amount_paid", "Amount paid (PHP)", { inputMode: "decimal" })}
             {date("cremains_received_on", "Date cremains / urn were received")}
-            {choice("urn_received", "Did you receive an urn?", YES_NO_UNKNOWN)}
-            {choice("fur_returned", "Was hair / fur returned?", YES_NO_UNKNOWN)}
-            {choice("paw_print_returned", "Was a paw print returned?", YES_NO_UNKNOWN)}
-            {choice("certificate_received", "Did you receive a certificate?", YES_NO_UNKNOWN)}
-            {txt("other_items_returned", "Anything else returned?")}
+            {choice("urn_received", "Urn received?", YES_NO_UNKNOWN)}
+            {choice("fur_returned", "Hair or fur returned?", YES_NO_UNKNOWN)}
+            {choice("paw_print_returned", "Paw print returned?", YES_NO_UNKNOWN)}
+            {choice("certificate_received", "Certificate received?", YES_NO_UNKNOWN)}
+            {txt("other_items_returned", "Other items returned")}
           </>
         )}
 
         {stepName === "What happened" && (
           <>
             <p className="rounded-xl border border-note-200 bg-note-50 p-3 text-sm text-note-800">
-              This will be recorded as an <strong>owner-submitted report</strong>. It is not treated as verified until independently supported.
+              This is recorded as an <strong>owner-submitted report</strong>. It is not treated as verified until independently supported.
             </p>
             {txt("incident_year", "Year", { inputMode: "numeric", required: true, placeholder: "e.g. 2023" })}
-            {txt("pet_name", "Pet’s name", { required: true })}
+            {txt("pet_name", "Pet name", { required: true })}
             {choice("species", "Species", [["dog", "Dog"], ["cat", "Cat"], ["other", "Other"]])}
             <div>
               {txt("provider_name", "Provider")}
               <p className="hint">Private. Not shown publicly.</p>
             </div>
             {select("service_type", "Service", SERVICE_TYPES)}
-            {area("narrative", "What happened", { required: true, rows: 6, hint: "In your own words. Stick to what you personally experienced or have records of." })}
+            {area("narrative", "What happened", { required: true, rows: 6, hint: "State what you personally experienced or have records of." })}
             {area("evidence_available_note", "Evidence you have available", { rows: 3, placeholder: "e.g. receipt, Messenger chat, photos of the urn" })}
-            {choice("urn_received", "Were ashes received?", YES_NO_UNKNOWN)}
-            {choice("refund_offered", "Was a refund offered?", YES_NO_UNKNOWN)}
+            {choice("urn_received", "Ashes received?", YES_NO_UNKNOWN)}
+            {choice("refund_offered", "Refund offered?", YES_NO_UNKNOWN)}
             {area("other_details", "Other relevant details", { rows: 4 })}
           </>
         )}
@@ -307,30 +307,30 @@ export function CaseWizard({
           <section className="card">
             <h2 className="font-serif text-lg font-semibold">Evidence vault</h2>
             <p className="hint mb-4">
-              Receipts, messages, certificates, photos of the urn or returned items, vet records, refund offers — anything you have. You can add more later.
+              Receipts, messages, certificates, photos of the urn or returned items, veterinary records, refund offers and other documents. More can be added later.
             </p>
             {slots.evidence}
           </section>
         )}
 
-        {stepName === "Contact & submit" && (
+        {stepName === "Contact and submit" && (
           <>
-            <p className="prose-calm">So a reviewer can reach you. <strong>Never shown publicly.</strong></p>
-            {txt("contact_name", "Your name", { autoComplete: "name" })}
+            <p className="prose-plain">Used by reviewers to contact you. <strong>Never shown publicly.</strong></p>
+            {txt("contact_name", "Name", { autoComplete: "name" })}
             {txt("contact_phone", "Mobile number", { type: "tel", inputMode: "tel", autoComplete: "tel" })}
             {txt("contact_email", "Email", { type: "email", inputMode: "email", autoComplete: "email" })}
-            {txt("contact_address", "Area (optional)", { hint: "Town or barangay is enough. Please don’t share your full address here.", autoComplete: "off" })}
+            {txt("contact_address", "Area (optional)", { hint: "Town or barangay only. Do not enter a full address.", autoComplete: "off" })}
             <label className="flex items-start gap-3 rounded-xl border border-sand-300 bg-white p-4">
               <input type="checkbox" className="mt-1 size-6 shrink-0" checked={!!values.consent_acknowledged} onChange={(e) => set("consent_acknowledged", e.target.checked)} />
               <span className="text-sm text-ink-700">
-                I confirm what I’ve shared is true to the best of my knowledge. I understand it is owner-submitted, will be reviewed by people, and that any potential match is an investigative lead, not a confirmed identification.
+                I confirm the information provided is accurate to the best of my knowledge. I understand it is owner-submitted, will be reviewed by people, and that any potential match is an investigative lead, not a confirmed identification.
               </span>
             </label>
             {submitMsg && <p role="alert" className="rounded-xl bg-soft-50 p-3 text-sm text-soft-800">{submitMsg}</p>}
             <button type="button" className="btn-primary w-full text-lg" onClick={submit} disabled={pending}>
-              {pending ? "Submitting…" : "Submit my report"}
+              {pending ? "Submitting…" : "Submit report"}
             </button>
-            <p className="text-center text-sm text-ink-500">You can still add evidence and edit details after submitting.</p>
+            <p className="text-center text-sm text-ink-500">Evidence and details can be edited after submitting.</p>
           </>
         )}
       </div>

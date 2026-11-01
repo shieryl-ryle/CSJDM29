@@ -59,8 +59,8 @@ export function PetForm({ pet, videos }: { pet: RecoveredPetRow | null; videos: 
               <option value="unknown">Unknown</option><option value="male">Male</option><option value="female">Female</option>
             </select>
           </F>
-          <F label="Primary colour"><input name="primary_color" defaultValue={v("primary_color")} className="input" /></F>
-          <F label="Secondary colours" hint="Comma-separated."><input name="secondary_colors" defaultValue={(pet?.secondary_colors ?? []).join(", ")} className="input" /></F>
+          <F label="Primary color"><input name="primary_color" defaultValue={v("primary_color")} className="input" /></F>
+          <F label="Secondary colors" hint="Comma-separated."><input name="secondary_colors" defaultValue={(pet?.secondary_colors ?? []).join(", ")} className="input" /></F>
           <F label="Estimated size">
             <select name="estimated_size" defaultValue={pet?.estimated_size ?? "unknown"} className="input">
               <option value="unknown">Unknown</option><option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option>
@@ -70,7 +70,7 @@ export function PetForm({ pet, videos }: { pet: RecoveredPetRow | null; videos: 
         <F label="Visible markings"><textarea name="visible_markings" defaultValue={v("visible_markings")} className="input" rows={2} /></F>
         <F label="Collar description"><textarea name="collar_description" defaultValue={v("collar_description")} className="input" rows={2} /></F>
         <F label="Other distinctive features"><textarea name="distinctive_features" defaultValue={v("distinctive_features")} className="input" rows={2} /></F>
-        <F label="Condition notes (reviewer-only — never public)" hint="May be distressing. Keep factual and respectful."><textarea name="condition_notes" defaultValue={v("condition_notes")} className="input" rows={2} /></F>
+        <F label="Condition notes (reviewer-only, never public)" hint="Record observations only."><textarea name="condition_notes" defaultValue={v("condition_notes")} className="input" rows={2} /></F>
       </fieldset>
 
       <fieldset className="card space-y-4">
@@ -83,8 +83,8 @@ export function PetForm({ pet, videos }: { pet: RecoveredPetRow | null; videos: 
         <div className="grid gap-4 sm:grid-cols-2">
           <F label="Recording changes as" hint="Applies to every field you changed in this save. Logged with source and timestamp.">
             <select name="origin" defaultValue={pet ? "reviewer_verified" : "source_documented"} className="input">
-              <option value="source_documented">Source-documented — what the source states/shows</option>
-              <option value="reviewer_verified">Reviewer-verified — I checked/corrected this against the source</option>
+              <option value="source_documented">Source-documented: what the source states or shows</option>
+              <option value="reviewer_verified">Reviewer-verified: checked or corrected against the source</option>
             </select>
           </F>
           <F label="Timestamp where this appears (mm:ss)"><input name="claim_timestamp" className="input" placeholder="34:26" /></F>

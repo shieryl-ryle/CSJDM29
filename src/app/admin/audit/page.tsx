@@ -15,7 +15,7 @@ export default async function AuditPage({ searchParams }: { searchParams: Promis
   return (
     <div>
       <h1 className="section-title">Audit log</h1>
-      <p className="prose-calm mt-2">Append-only. Shows the 200 most recent entries.</p>
+      <p className="prose-plain mt-2">Append-only. Shows the 200 most recent entries.</p>
       <form className="mt-4 flex flex-wrap gap-2">
         <input name="type" defaultValue={sp.type} placeholder="Entity type (e.g. evidence)" className="input max-w-xs" />
         <input name="entity" defaultValue={sp.entity} placeholder="Entity id" className="input max-w-xs" />
@@ -28,7 +28,7 @@ export default async function AuditPage({ searchParams }: { searchParams: Promis
               <span><strong>{a.action}</strong> · {a.entity_type} <span className="break-all font-mono text-xs text-ink-500">{a.entity_id}</span></span>
               <span className="text-ink-500">{formatDateTime(a.timestamp)}</span>
             </p>
-            <p className="text-xs text-ink-500">actor: <span className="font-mono">{a.actor_id ?? "system / anonymous"}</span> ({a.actor_role ?? "—"})</p>
+            <p className="text-xs text-ink-500">actor: <span className="font-mono">{a.actor_id ?? "system / anonymous"}</span> ({a.actor_role ?? "n/a"})</p>
             {(a.previous_value || a.new_value) && (
               <details className="mt-1">
                 <summary className="cursor-pointer text-xs text-brand-700">Details</summary>

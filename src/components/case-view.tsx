@@ -30,7 +30,7 @@ export function CaseSummary({ kase: c, includeContact = true }: { kase: CaseRow;
           <Row label="Breed" value={c.breed} />
           <Row label="Sex" value={c.sex && SEX_LABEL[c.sex]} />
           <Row label="Age" value={c.age_text} />
-          <Row label="Colours" value={colors} />
+          <Row label="Colors" value={colors} />
           <Row label="Distinctive markings" value={c.distinctive_markings} />
           <Row label="Other distinguishing details" value={c.distinguishing_description} />
           <Row label="Approximate weight" value={formatKg(c.approx_weight_kg)} />
@@ -48,7 +48,7 @@ export function CaseSummary({ kase: c, includeContact = true }: { kase: CaseRow;
           <h3 className="text-xs font-bold uppercase tracking-wide text-ink-500">Aftercare information · owner-submitted · private</h3>
           <dl className="mt-2">
             <Row label="Aftercare provider" value={c.provider_name} />
-            <Row label="Service purchased" value={c.service_type && (SERVICE_TYPE_LABEL[c.service_type] + (c.service_other ? ` — ${c.service_other}` : ""))} />
+            <Row label="Service purchased" value={c.service_type && (SERVICE_TYPE_LABEL[c.service_type] + (c.service_other ? `, ${c.service_other}` : ""))} />
             <Row label="Date collected / surrendered" value={formatDate(c.collected_on)} />
             <Row label="Collection method" value={c.collection_method} />
             <Row label="Amount paid" value={c.amount_paid != null && `${c.amount_currency} ${Number(c.amount_paid).toLocaleString("en-PH")}`} />
@@ -64,7 +64,7 @@ export function CaseSummary({ kase: c, includeContact = true }: { kase: CaseRow;
 
       {c.case_kind === "historical" && (
         <section className="card">
-          <h3 className="text-xs font-bold uppercase tracking-wide text-ink-500">Previous experience · owner-submitted report</h3>
+          <h3 className="text-xs font-bold uppercase tracking-wide text-ink-500">Previous incident · owner-submitted report</h3>
           <dl className="mt-2">
             <Row label="Year" value={c.incident_year} />
             <Row label="What happened" value={<span className="whitespace-pre-wrap">{c.narrative}</span>} />
@@ -103,7 +103,7 @@ export function TimelineView({ items, caseId, evidence, canAdd = true }: { items
   return (
     <div>
       {items.length === 0 ? (
-        <p className="text-sm text-ink-500">Your timeline will appear here as you add dates and evidence.</p>
+        <p className="text-sm text-ink-500">The timeline is built from entered dates and uploaded evidence.</p>
       ) : (
         <ol className="relative space-y-4 border-l-2 border-brand-200 pl-5">
           {items.map((it) => (
@@ -157,7 +157,7 @@ export function TimelineView({ items, caseId, evidence, canAdd = true }: { items
                     .sort((a, b) => a.uploaded_at.localeCompare(b.uploaded_at))
                     .map((e) => (
                       <option key={e.id} value={e.id}>
-                        {labels.get(e.id)} — {EVIDENCE_TYPE_LABEL[e.evidence_type] ?? e.evidence_type}
+                        {labels.get(e.id)}: {EVIDENCE_TYPE_LABEL[e.evidence_type] ?? e.evidence_type}
                       </option>
                     ))}
                 </select>
@@ -223,7 +223,7 @@ export function MatchCard({
       </div>
       <div className="mt-3"><ComparisonList comparisons={comparisons} /></div>
       <p className="mt-3 rounded-lg bg-note-50 p-2 text-xs text-note-800">{MATCH_NOTICE}</p>
-      <p className="mt-2 text-xs text-ink-500">Status: {MATCH_REVIEW_LABEL[reviewStatus]}{reviewerNote ? ` — ${reviewerNote}` : ""}</p>
+      <p className="mt-2 text-xs text-ink-500">Status: {MATCH_REVIEW_LABEL[reviewStatus]}{reviewerNote ? `. ${reviewerNote}` : ""}</p>
       <p className="mt-3 flex flex-wrap gap-2">
         <Link href={`/registry/${pet.public_case_number}`} className="btn-secondary btn-sm">Review record</Link>
       </p>

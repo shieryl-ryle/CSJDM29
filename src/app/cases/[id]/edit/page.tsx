@@ -22,7 +22,7 @@ export default async function EditCase({ params }: { params: Promise<{ id: strin
   return (
     <PageShell narrow>
       <p className="text-sm"><Link href="/cases" className="underline">← My cases</Link> · {kase.case_number}</p>
-      <h1 className="section-title mt-2">{kase.case_kind === "historical" ? "Report a previous experience" : "Report / register my pet"}</h1>
+      <h1 className="section-title mt-2">{kase.case_kind === "historical" ? "Report a previous incident" : "Report or register a pet"}</h1>
       <div className="mt-4">
         <CaseWizard
           initial={kase}

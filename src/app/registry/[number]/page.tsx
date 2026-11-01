@@ -50,7 +50,7 @@ export default async function PetPage({ params }: { params: Promise<{ number: st
         <h2 className="text-xs font-bold uppercase tracking-wide text-ink-500">Observed characteristics</h2>
         <dl className="mt-2">
           <FieldRow label="Species" value={pet.species !== "unknown" && SPECIES_LABEL[pet.species]} origin={o.species} />
-          <FieldRow label="Colour" value={colorText(pet) !== "Not recorded" && colorText(pet)} origin={o.primary_color ?? o.secondary_colors} />
+          <FieldRow label="Color" value={colorText(pet) !== "Not recorded" && colorText(pet)} origin={o.primary_color ?? o.secondary_colors} />
           <FieldRow label="Size" value={pet.estimated_size !== "unknown" && SIZE_LABEL[pet.estimated_size]} origin={o.estimated_size} />
           <FieldRow label="Possible sex" value={pet.possible_sex !== "unknown" && sexText(pet.possible_sex)} origin={o.possible_sex} />
           <FieldRow label="Distinctive markings" value={pet.visible_markings} origin={o.visible_markings} />
@@ -91,11 +91,11 @@ export default async function PetPage({ params }: { params: Promise<{ number: st
       </section>
 
       <section className="card mt-5 border-brand-200 bg-brand-50/50">
-        <h2 className="font-serif text-lg font-semibold">Think this might be your pet?</h2>
+        <h2 className="font-serif text-lg font-semibold">Possible match with a pet?</h2>
         <p className="mt-1 text-sm text-ink-700">
-          Please don’t rely on this page alone. Register your pet’s details and evidence, and a reviewer can compare characteristics in common. This is not a confirmed identification.
+          This page is not an identification. Register the pet’s details and evidence so a reviewer can compare characteristics in common.
         </p>
-        <p className="mt-3"><Link href="/report" className="btn-primary">Report / register my pet</Link></p>
+        <p className="mt-3"><Link href="/report" className="btn-primary">Report or register a pet</Link></p>
       </section>
 
       <DisclaimerBox className="mt-6" />

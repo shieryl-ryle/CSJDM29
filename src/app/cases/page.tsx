@@ -22,7 +22,7 @@ export default async function Cases() {
         <Link href="/report" className="btn-primary btn-sm">+ New</Link>
       </div>
       {(cases ?? []).length === 0 ? (
-        <p className="card mt-5 text-ink-700">You haven’t started a report yet. <Link className="underline" href="/report">Start one</Link>.</p>
+        <p className="card mt-5 text-ink-700">No reports yet. <Link className="underline" href="/report">Start a report</Link>.</p>
       ) : (
         <ul className="mt-5 space-y-3">
           {cases!.map((c) => (
@@ -34,7 +34,7 @@ export default async function Cases() {
                 <Badge tone={c.status === "draft" ? "note" : "good"}>{CASE_STATUS_LABEL[c.status]}</Badge>
               </div>
               <p className="mt-1 text-sm text-ink-500">
-                {c.case_kind === "historical" ? "Previous experience · " : ""}Started {formatDate(c.created_at)}
+                {c.case_kind === "historical" ? "Previous incident · " : ""}Started {formatDate(c.created_at)}
               </p>
               <p className="mt-3">
                 <Link className="btn-secondary btn-sm" href={c.status === "draft" ? `/cases/${c.id}/edit` : `/cases/${c.id}`}>

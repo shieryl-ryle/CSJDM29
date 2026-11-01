@@ -50,7 +50,7 @@ export function EvidenceUploadPanel({ caseId, defaultType = "receipt", petPhotos
     <div className="space-y-4">
       {!petPhotosOnly && (
         <div>
-          <label className="label" htmlFor={`etype-${caseId}`}>What are you uploading?</label>
+          <label className="label" htmlFor={`etype-${caseId}`}>File type</label>
           <select id={`etype-${caseId}`} className="input" value={type} onChange={(e) => setType(e.target.value)}>
             {EVIDENCE_TYPES.map(([k, v]) => (
               <option key={k} value={k}>{v}</option>
@@ -59,12 +59,12 @@ export function EvidenceUploadPanel({ caseId, defaultType = "receipt", petPhotos
         </div>
       )}
       <div>
-        <label className="label" htmlFor={`edesc-${caseId}`}>Short note (optional)</label>
-        <input id={`edesc-${caseId}`} className="input" value={description} maxLength={500} onChange={(e) => setDescription(e.target.value)} placeholder={petPhotosOnly ? "e.g. Mochi at her birthday, 2024" : "e.g. Receipt from the day I handed over my pet"} />
+        <label className="label" htmlFor={`edesc-${caseId}`}>Note (optional)</label>
+        <input id={`edesc-${caseId}`} className="input" value={description} maxLength={500} onChange={(e) => setDescription(e.target.value)} placeholder={petPhotosOnly ? "e.g. Photo taken in 2024" : "e.g. Receipt issued on the day of handover"} />
       </div>
       <Uploader buildOptions={buildOptions} accept={petPhotosOnly ? "image/*" : undefined} />
       <p className="hint">
-        Files stay <strong>private</strong>. The original is never changed. Photos and screenshots are fine; if a file is very large, send a shorter clip or a screenshot.
+        Files are <strong>private</strong>. The original is never changed. For large files, upload a shorter clip or a screenshot.
       </p>
     </div>
   );

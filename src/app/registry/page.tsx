@@ -38,8 +38,8 @@ export default async function Registry({ searchParams }: { searchParams: Promise
   return (
     <PageShell>
       <h1 className="section-title">Recovered pets registry</h1>
-      <p className="prose-calm mt-2">
-        Documented recovered animals, with the information exactly as the source documented it. Search by anything you remember — a name, a weight, colours.
+      <p className="prose-plain mt-2">
+        Documented recovered animals, with information as documented by the source. Search by name, weight, species, sex, colors or markings.
       </p>
       <GraphicNotice className="mt-4" />
 
@@ -89,7 +89,7 @@ export default async function Registry({ searchParams }: { searchParams: Promise
           </div>
         </div>
         <div>
-          <label className="label" htmlFor="color">Colours</label>
+          <label className="label" htmlFor="color">Colors</label>
           <input id="color" name="color" defaultValue={sp.color} className="input" placeholder="e.g. white and brown" />
         </div>
         <div>
@@ -104,7 +104,7 @@ export default async function Registry({ searchParams }: { searchParams: Promise
 
       <section className="mt-8" aria-live="polite">
         {error ? (
-          <p className="card text-ink-700">The registry is not available right now. Please try again shortly.</p>
+          <p className="card text-ink-700">The registry is unavailable. Try again shortly.</p>
         ) : (
           <>
             <p className="text-sm text-ink-500">
@@ -112,7 +112,7 @@ export default async function Registry({ searchParams }: { searchParams: Promise
             </p>
             {hits.length === 0 ? (
               <p className="card mt-3 text-ink-700">
-                No records have these characteristics. Records are still being documented, so please check back — or try fewer filters or similar spellings.
+                No records have these characteristics. Records are still being added. Try fewer filters or similar spellings.
               </p>
             ) : (
               <ul className="mt-3 grid gap-4 sm:grid-cols-2">

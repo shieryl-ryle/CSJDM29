@@ -35,7 +35,7 @@ export function AuthForm({
       {state.error && <p role="alert" className="rounded-xl bg-soft-50 p-3 text-sm text-soft-800">{state.error}</p>}
       {state.message && <p role="status" className="rounded-xl bg-brand-50 p-3 text-sm text-brand-800">{state.message}</p>}
       <button className="btn-primary w-full" disabled={pending}>
-        {pending ? "Please wait…" : mode === "login" ? "Sign in" : "Create account"}
+        {pending ? "Working…" : mode === "login" ? "Sign in" : "Create account"}
       </button>
       <p className="text-center text-sm text-ink-500">
         {mode === "login" ? (

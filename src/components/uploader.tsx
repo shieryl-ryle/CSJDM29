@@ -96,12 +96,12 @@ export function Uploader({ buildOptions, accept = "image/*,application/pdf,video
       <div className="flex flex-col gap-2 sm:flex-row">
         {camera && (
           <label className={`btn-secondary cursor-pointer ${disabled ? "pointer-events-none opacity-60" : ""}`}>
-            📷 Take a photo
+            Take a photo
             <input type="file" accept="image/*" capture="environment" className="sr-only" disabled={disabled} onChange={(e) => { add(e.target.files); e.target.value = ""; }} />
           </label>
         )}
         <label className={`btn-primary cursor-pointer ${disabled ? "pointer-events-none opacity-60" : ""}`}>
-          📁 Choose from gallery / files
+          Choose from gallery or files
           <input type="file" accept={accept} multiple={multiple} className="sr-only" disabled={disabled} onChange={(e) => { add(e.target.files); e.target.value = ""; }} />
         </label>
       </div>

@@ -80,7 +80,7 @@ export const YNU_LABEL: Record<string, string> = { yes: "Yes", no: "No", unknown
 
 export const CASE_STATUS_LABEL: Record<string, string> = {
   draft: "Draft (not yet submitted)",
-  submitted: "Submitted — awaiting review",
+  submitted: "Submitted, awaiting review",
   under_review: "Under review",
   needs_info: "More information requested",
   closed: "Closed",
@@ -95,7 +95,7 @@ export const VERIFICATION_LABEL: Record<string, string> = {
 
 export const ORIGIN_LABEL: Record<string, string> = {
   source_documented: "Source-documented",
-  system_extracted: "System-extracted — pending review",
+  system_extracted: "System-extracted, pending review",
   reviewer_verified: "Reviewer-verified",
   owner_submitted: "Owner-submitted",
 };
@@ -108,7 +108,7 @@ export const CLAIM_VERIFICATION_LABEL: Record<string, string> = {
 };
 
 export const RECORD_STATUS_LABEL: Record<string, string> = {
-  candidate: "Candidate — awaiting human review",
+  candidate: "Candidate, awaiting human review",
   approved: "Approved",
   rejected: "Rejected",
   merged: "Merged into another record",
@@ -116,7 +116,7 @@ export const RECORD_STATUS_LABEL: Record<string, string> = {
 
 export const MATCH_REVIEW_LABEL: Record<string, string> = {
   unreviewed: "Awaiting human review",
-  reviewer_noted_plausible: "Reviewer: worth further follow-up",
+  reviewer_noted_plausible: "Reviewer: follow-up recommended",
   needs_more_info: "Reviewer: more information needed",
   reviewer_dismissed: "Reviewer: characteristics did not hold up",
 };

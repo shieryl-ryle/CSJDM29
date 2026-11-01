@@ -71,7 +71,7 @@ export function buildTimeline(input: {
     items.push({
       key: `ev-${e.id}`,
       date: e.uploaded_at.slice(0, 10),
-      title: `Evidence file preserved: ${labels.get(e.id)} — ${EVIDENCE_TYPE_LABEL[e.evidence_type] ?? e.evidence_type}`,
+      title: `Evidence file preserved: ${labels.get(e.id)}: ${EVIDENCE_TYPE_LABEL[e.evidence_type] ?? e.evidence_type}`,
       detail: `SHA-256 recorded at upload.`,
       origin: "system",
       evidence: [{ id: e.id, label: labels.get(e.id)!, explicit: true }],
@@ -84,7 +84,7 @@ export function buildTimeline(input: {
       key: `match-${m.pet_number}`,
       date: m.documented_on,
       title: `Recovered animal ${m.pet_number} documented with potentially corresponding information`,
-      detail: "Potential match — requires human review. Not a confirmed identification.",
+      detail: "Potential match. Requires human review. Not a confirmed identification.",
       origin: "system",
       evidence: [],
     });

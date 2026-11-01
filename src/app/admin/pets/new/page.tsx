@@ -9,7 +9,7 @@ export default async function NewPet() {
   return (
     <div>
       <h1 className="section-title">New recovered-pet record</h1>
-      <p className="prose-calm mt-2">Enter only what the source shows or states. Frames can be added after saving.</p>
+      <p className="prose-plain mt-2">Enter only what the source shows or states. Frames can be added after saving.</p>
       <div className="mt-6"><PetForm pet={null} videos={videos ?? []} /></div>
     </div>
   );

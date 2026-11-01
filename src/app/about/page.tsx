@@ -1,48 +1,46 @@
 import { DISCLAIMER_FULL, HASH_EXPLAINER, MATCH_NOTICE } from "@/lib/constants";
 import { PageShell } from "@/components/site";
 
-export const metadata = { title: "About, privacy & how matching works" };
+export const metadata = { title: "Method and privacy" };
 
 export default function About() {
   return (
     <PageShell narrow>
-      <h1 className="section-title">About this platform</h1>
-      <div className="prose-calm mt-4 space-y-4">
+      <h1 className="section-title">Method and privacy</h1>
+      <div className="prose-plain mt-4 space-y-4">
         <p>
-          This is an independent community platform. Its job is to help affected pet owners keep their evidence safe and organized, and to make it possible to compare owner information with documented recovered animals — carefully, and with people reviewing every step.
+          This is an independent community platform. It stores owner evidence, keeps a registry of documented recovered animals, and lists characteristics in common between the two. People review every record and every potential match.
         </p>
-        <p className="rounded-2xl border border-note-200 bg-note-50 p-4 text-note-800">{DISCLAIMER_FULL}</p>
+        <p className="border-l-4 border-brand-600 bg-sand-100 p-4 text-ink-900">{DISCLAIMER_FULL}</p>
 
-        <h2 className="font-serif text-xl font-semibold text-ink-900">Terminology</h2>
-        <p>
-          We say “potential match”, “characteristics in common”, “owner-submitted”, “source-documented” and “pending verification”. We never say a pet has been identified, and we never describe any person or business as having done anything wrong.
-        </p>
+        <h2 className="text-xl font-bold text-ink-900">Terminology</h2>
+        <p>The platform uses: potential match, characteristics in common, owner-submitted, source-documented, pending verification. It does not state that an animal has been identified, and it makes no statement about any person or business.</p>
 
-        <h2 className="font-serif text-xl font-semibold text-ink-900">How potential matches work</h2>
+        <h2 className="text-xl font-bold text-ink-900">Potential matches</h2>
         <p>
-          Matching is simple and explainable: we compare name (exact or similar spelling), weight (exact, within ±0.5 kg, within ±1 kg), species, sex, colours and dates, and show side by side what is and isn’t in common. Distinctive markings are always left to human review. There is no facial recognition and no probability score. {MATCH_NOTICE}
+          Matching is rule-based. It compares name (exact or similar spelling), weight (exact, within 0.5 kg, within 1 kg), species, sex, colors and dates, and lists each comparison. Distinctive markings are left to human review. There is no facial recognition and no probability score. {MATCH_NOTICE}
         </p>
 
-        <h2 className="font-serif text-xl font-semibold text-ink-900">Your evidence</h2>
+        <h2 className="text-xl font-bold text-ink-900">Evidence handling</h2>
         <p>
-          Everything you upload is private by default. Original files are never altered. When a file is stored, the platform records a SHA-256 “digital fingerprint”. {HASH_EXPLAINER} Evidence can only be seen by you and by authorized reviewers, and every access by a reviewer is recorded in an audit log.
+          Uploads are private by default and originals are never altered. A SHA-256 hash is calculated from each stored file. {HASH_EXPLAINER} Only the uploader and authorized reviewers can access a file. Each reviewer access is recorded in an audit log.
         </p>
 
-        <h2 className="font-serif text-xl font-semibold text-ink-900">What is never public</h2>
+        <h2 className="text-xl font-bold text-ink-900">Not published</h2>
         <ul className="list-disc space-y-1 pl-5">
           <li>Owner names, addresses, phone numbers and emails</li>
           <li>Government IDs and payment account information</li>
           <li>Private Messenger conversations and veterinary documents</li>
           <li>Unredacted receipts</li>
-          <li>The name of any aftercare provider you mention (reviewers can see it to correlate cases)</li>
+          <li>Aftercare provider names (visible to reviewers only)</li>
           <li>Reviewer notes</li>
         </ul>
 
-        <h2 className="font-serif text-xl font-semibold text-ink-900">Graphic content</h2>
-        <p>Some recovered-animal records include images of deceased animals. Images are hidden until you choose to reveal them.</p>
+        <h2 className="text-xl font-bold text-ink-900">Graphic content</h2>
+        <p>Some records include images of deceased animals. Images stay hidden until Reveal is selected.</p>
 
-        <h2 className="font-serif text-xl font-semibold text-ink-900">Please don’t</h2>
-        <p>Fabricate, alter or misrepresent evidence. Submit only information you personally have or can identify the source of.</p>
+        <h2 className="text-xl font-bold text-ink-900">Submission rules</h2>
+        <p>Submit only information you possess or can identify the source of. Do not fabricate, alter or misrepresent evidence.</p>
       </div>
     </PageShell>
   );

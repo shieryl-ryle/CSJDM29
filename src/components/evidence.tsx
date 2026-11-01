@@ -36,13 +36,13 @@ export function EvidenceList({ evidence, canEdit = true }: { evidence: EvidenceR
             </p>
             {e.hash_matches_client === false && (
               <p className="mt-1 rounded-lg bg-note-50 p-2 text-xs text-note-800">
-                The fingerprint calculated on the uploader’s device differs from the stored file’s. This is flagged for reviewers.
+                The SHA-256 calculated on the uploader’s device differs from the stored file’s. Flagged for reviewers.
               </p>
             )}
             <div className="mt-2 flex flex-wrap items-center gap-1">
               {e.mime_type.startsWith("image/") && !e.mime_type.includes("heic") && !e.mime_type.includes("heif") && <ImagePreview id={e.id} alt={e.original_filename} />}
               <a className="btn-ghost btn-sm" href={`/api/evidence/${e.id}/download`}>Download original</a>
-              <CopyButton text={e.sha256} label="Copy fingerprint" />
+              <CopyButton text={e.sha256} label="Copy SHA-256" />
             </div>
             {canEdit && (
               <details className="mt-1">
@@ -52,7 +52,7 @@ export function EvidenceList({ evidence, canEdit = true }: { evidence: EvidenceR
                   <input name="description" defaultValue={e.description ?? ""} maxLength={2000} className="input" aria-label="Note" />
                   <button className="btn-secondary btn-sm">Save note</button>
                 </form>
-                <p className="hint">Only the note can be edited. The file and its fingerprint can never be changed.</p>
+                <p className="hint">Only the note can be edited. The file and its SHA-256 hash cannot be changed.</p>
               </details>
             )}
           </li>

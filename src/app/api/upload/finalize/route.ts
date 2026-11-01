@@ -64,7 +64,7 @@ export async function POST(req: Request) {
   let prefix: string;
   let uploadedBy: string | null = session?.user.id ?? null;
   if (b.target === "evidence") {
-    if (!session) return fail("Please sign in", 401);
+    if (!session) return fail("Sign in required", 401);
     const { data: kase } = await session.supabase.from("cases").select("id").eq("id", b.caseId).maybeSingle();
     if (!kase) return fail("Case not found", 404);
     prefix = `cases/${b.caseId}/`;
@@ -85,7 +85,7 @@ export async function POST(req: Request) {
 
   // --- read back stored bytes and hash them server-side
   const { data: blob, error: dlErr } = await admin.storage.from(bucket).download(b.path);
-  if (dlErr || !blob) return fail("Upload did not complete. Please try again.", 409);
+  if (dlErr || !blob) return fail("Upload did not complete. Try again.", 409);
   if (blob.size > MAX_UPLOAD_BYTES) return fail("File is too large", 413);
   const bytes = new Uint8Array(await blob.arrayBuffer());
   const sha256 = sha256Hex(bytes);

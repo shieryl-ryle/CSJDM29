@@ -16,8 +16,8 @@ Interfaces / schema exist for most of these; nothing below is faked in the UI.
 - [ ] Notify owners (email) when a reviewer marks "needs info" or flags a match worth follow-up.
 - [ ] Nickname dictionary for name matching (currently: exact, shared token, edit distance, phonetic key).
 
-## P2 (after launch) — plug into `src/lib/ingestion/providers.ts`
-- [ ] Speech-to-text (`Transcriber`) — run as a background job, never inside a request.
+## P2 (after launch), plug into `src/lib/ingestion/providers.ts`
+- [ ] Speech-to-text (`Transcriber`), run as a background job, never inside a request.
 - [ ] Candidate segmentation (`Segmenter`).
 - [ ] Frame extraction (`FrameExtractor`) writing to `pet_media` (derived copies only).
 - [ ] OCR of name/weight labels (`OcrReader`) → claims with `origin = system_extracted`.

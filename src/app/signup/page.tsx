@@ -9,9 +9,9 @@ export default async function SignupPage({ searchParams }: { searchParams: Promi
   const next = sp.next?.startsWith("/") && !sp.next.startsWith("//") ? sp.next : "/report";
   return (
     <PageShell narrow>
-      <h1 className="section-title mb-2">Create your account</h1>
+      <h1 className="section-title mb-2">Create account</h1>
       <p className="mb-5 text-ink-700">
-        An account keeps your evidence private. Only you and authorized reviewers can see what you upload. We use your email only to contact you about your case.
+        An account keeps evidence private. Only the account holder and authorized reviewers can see uploaded files. The email address is used only to contact you about your case.
       </p>
       <AuthForm mode="signup" action={signUp} next={next} />
     </PageShell>

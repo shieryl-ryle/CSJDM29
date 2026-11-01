@@ -30,8 +30,8 @@ export default async function CasePage({ params, searchParams }: { params: Promi
     <PageShell narrow>
       {sp.submitted && (
         <div role="status" className="mb-5 rounded-2xl border border-brand-200 bg-brand-50 p-4 text-brand-800">
-          <p className="font-semibold">Thank you — your report has been submitted.</p>
-          <p className="text-sm">A reviewer will look at it. You can keep adding evidence below at any time.</p>
+          <p className="font-semibold">Report submitted.</p>
+          <p className="text-sm">A reviewer will review it. Evidence can be added below at any time.</p>
         </div>
       )}
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -39,13 +39,14 @@ export default async function CasePage({ params, searchParams }: { params: Promi
         <Badge tone={kase.status === "draft" ? "note" : "good"}>{CASE_STATUS_LABEL[kase.status]}</Badge>
       </div>
       <p className="mt-1 text-sm text-ink-500">
-        Case ID {kase.case_number} · {kase.case_kind === "historical" ? "Owner-submitted report of a previous experience" : "Owner-submitted case"}
+        Case ID {kase.case_number} · {kase.case_kind === "historical" ? "Owner-submitted report of a previous incident" : "Owner-submitted case"}
       </p>
 
       <nav className="mt-4 flex flex-wrap gap-2" aria-label="Case actions">
-        <Link href={`/cases/${id}/edit`} className="btn-secondary btn-sm">{kase.status === "draft" ? "Continue my report" : "Edit details"}</Link>
+        <Link href={`/cases/${id}/edit`} className="btn-secondary btn-sm">{kase.status === "draft" ? "Continue report" : "Edit details"}</Link>
         {kase.case_kind === "current" && <Link href={`/cases/${id}/matches`} className="btn-secondary btn-sm">Possible matches ({matches.length})</Link>}
-        <Link href={`/cases/${id}/export`} className="btn-secondary btn-sm">Export case summary</Link>
+        <Link href={`/cases/${id}/export`} className="btn-secondary btn-sm">Print case summary</Link>
+        <form action="/api/export/zip" method="post"><input type="hidden" name="caseId" value={id} /><button className="btn-secondary btn-sm">Download all files (ZIP)</button></form>
       </nav>
 
       <section className="mt-8">
@@ -55,7 +56,7 @@ export default async function CasePage({ params, searchParams }: { params: Promi
 
       <section className="mt-10">
         <h2 className="section-title text-xl sm:text-2xl">Evidence vault</h2>
-        <p className="prose-calm mt-1 text-sm">Private to you and authorized reviewers. Originals are never modified.</p>
+        <p className="prose-plain mt-1 text-sm">Visible only to the account holder and authorized reviewers. Originals are never modified.</p>
         <div className="mt-4"><EvidenceList evidence={evidence} /></div>
         <div className="card mt-4">
           <h3 className="font-semibold">Add more evidence</h3>
@@ -64,7 +65,7 @@ export default async function CasePage({ params, searchParams }: { params: Promi
       </section>
 
       <section className="mt-10">
-        <h2 className="section-title text-xl sm:text-2xl">Your information</h2>
+        <h2 className="section-title text-xl sm:text-2xl">Submitted information</h2>
         <div className="mt-4"><CaseSummary kase={kase} /></div>
       </section>
 

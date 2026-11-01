@@ -62,7 +62,7 @@ export default async function AdminPet({ params, searchParams }: { params: Promi
             // eslint-disable-next-line jsx-a11y/media-has-caption
             <video src={videoUrl} controls preload="metadata" playsInline className="w-full rounded-xl bg-black" />
           )}
-          {pet.video_start_seconds != null && <p className="text-sm">Timestamp: {formatSeconds(pet.video_start_seconds)}{pet.video_end_seconds != null && ` — ${formatSeconds(pet.video_end_seconds)}`}</p>}
+          {pet.video_start_seconds != null && <p className="text-sm">Timestamp: {formatSeconds(pet.video_start_seconds)}{pet.video_end_seconds != null && ` to ${formatSeconds(pet.video_end_seconds)}`}</p>}
           {pet.source_transcript && (
             <blockquote className="border-l-4 border-brand-200 pl-3 text-sm italic text-ink-700">“{pet.source_transcript}”</blockquote>
           )}
@@ -100,7 +100,7 @@ export default async function AdminPet({ params, searchParams }: { params: Promi
       </section>
 
       <section className="card">
-        <h2 className="text-xs font-bold uppercase tracking-wide text-ink-500">Provenance — every claim, by field</h2>
+        <h2 className="text-xs font-bold uppercase tracking-wide text-ink-500">Provenance: every claim, by field</h2>
         <div className="mt-3"><ProvenanceList claims={(claims ?? []) as ClaimRow[]} /></div>
       </section>
 

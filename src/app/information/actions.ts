@@ -12,11 +12,11 @@ export type WitnessResult =
   | { ok: false; error: string };
 
 const schema = z.object({
-  info_text: z.string().trim().min(10, "Please describe the information you have").max(8000),
+  info_text: z.string().trim().min(10, "Describe the information").max(8000),
   links: z.string().max(4000).optional(),
   approx_date: z.string().trim().max(100).optional(),
   location: z.string().trim().max(300).optional(),
-  how_obtained: z.string().trim().min(3, "Please tell us how you obtained this information").max(2000),
+  how_obtained: z.string().trim().min(3, "State how the information was obtained").max(2000),
   contact: z.string().trim().max(300).optional(),
   anonymous: z.string().optional(),
   website: z.string().optional(), // honeypot
@@ -46,7 +46,7 @@ export async function submitWitness(form: FormData): Promise<WitnessResult> {
   const admin = createAdminClient();
   const since = new Date(Date.now() - 60 * 60 * 1000).toISOString();
   const { count } = await admin.from("witness_submissions").select("id", { count: "exact", head: true }).eq("ip_hash", ipHash).gte("created_at", since);
-  if ((count ?? 0) >= 5) return { ok: false, error: "Too many submissions from this connection. Please try again later." };
+  if ((count ?? 0) >= 5) return { ok: false, error: "Too many submissions from this connection. Try again later." };
 
   const anonymous = d.anonymous === "on" || d.anonymous === "true";
   const session = anonymous ? null : await getSession();
@@ -66,7 +66,7 @@ export async function submitWitness(form: FormData): Promise<WitnessResult> {
     })
     .select("id, upload_key")
     .single();
-  if (error || !data) return { ok: false, error: "Could not submit. Please try again." };
+  if (error || !data) return { ok: false, error: "Could not submit. Try again." };
 
   await logAudit({ actorId: session?.user.id ?? null, actorRole: session ? session.profile.role : "anonymous", action: "witness_submissions.create", entityType: "witness_submissions", entityId: data.id, next: { anonymous, links: links.length } });
   return { ok: true, submissionId: data.id, uploadKey: data.upload_key };

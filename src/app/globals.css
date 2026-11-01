@@ -2,32 +2,34 @@
 
 @theme {
   --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, "Times New Roman", serif;
+  --font-serif: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 
-  --color-brand-50: #eef6f5;
-  --color-brand-100: #d6eae7;
-  --color-brand-200: #aed4cf;
-  --color-brand-500: #3f8a82;
-  --color-brand-600: #2f726b;
-  --color-brand-700: #275c57;
-  --color-brand-800: #1f4945;
+  /* red accent + black */
+  --color-brand-50: #f5f5f5;
+  --color-brand-100: #e8e8e8;
+  --color-brand-200: #cfcfcf;
+  --color-brand-500: #d62828;
+  --color-brand-600: #c1121f;
+  --color-brand-700: #9b0e18;
+  --color-brand-800: #0a0a0a;
 
-  --color-sand-50: #faf8f4;
-  --color-sand-100: #f3eee6;
-  --color-sand-200: #e6dfd2;
-  --color-sand-300: #d4cabb;
+  /* neutral greys */
+  --color-sand-50: #fafafa;
+  --color-sand-100: #f1f1f1;
+  --color-sand-200: #dedede;
+  --color-sand-300: #bdbdbd;
 
-  --color-ink-900: #1f2a2e;
-  --color-ink-700: #3b484d;
-  --color-ink-500: #66767c;
+  --color-ink-900: #0a0a0a;
+  --color-ink-700: #2a2a2a;
+  --color-ink-500: #595959;
 
-  --color-note-50: #fbf4e2;
-  --color-note-200: #efd9a0;
-  --color-note-800: #6b5316;
+  --color-note-50: #f1f1f1;
+  --color-note-200: #b5b5b5;
+  --color-note-800: #0a0a0a;
 
-  --color-soft-50: #fbefed;
-  --color-soft-200: #ecc7c1;
-  --color-soft-800: #7a3b33;
+  --color-soft-50: #fdecec;
+  --color-soft-200: #f2b5b5;
+  --color-soft-800: #8f0d14;
 }
 
 html {
@@ -48,10 +50,10 @@ body {
   @apply btn bg-brand-600 text-white hover:bg-brand-700;
 }
 @utility btn-secondary {
-  @apply btn border-2 border-brand-600 bg-white text-brand-700 hover:bg-brand-50;
+  @apply btn border-2 border-ink-900 bg-white text-ink-900 hover:bg-sand-100;
 }
 @utility btn-ghost {
-  @apply btn text-brand-700 hover:bg-brand-50;
+  @apply btn text-ink-900 hover:bg-sand-100;
 }
 @utility btn-sm {
   @apply min-h-10! px-3! py-2! text-sm!;
@@ -60,7 +62,7 @@ body {
   @apply btn border-2 border-soft-800 bg-white text-soft-800 hover:bg-soft-50;
 }
 @utility input {
-  @apply block min-h-12 w-full rounded-xl border border-sand-300 bg-white px-4 py-3 text-base text-ink-900 placeholder:text-ink-500/70 focus:border-brand-600 focus:outline-2 focus:outline-brand-600/30;
+  @apply block min-h-12 w-full rounded-xl border border-sand-300 bg-white px-4 py-3 text-base text-ink-900 placeholder:text-ink-500/70 focus:border-ink-900 focus:outline-2 focus:outline-brand-600;
 }
 @layer components {
   textarea.input {
@@ -74,19 +76,27 @@ body {
   @apply mt-1 text-sm text-ink-500;
 }
 @utility card {
-  @apply rounded-2xl border border-sand-200 bg-white p-5 shadow-sm;
+  @apply rounded-lg border border-sand-300 bg-white p-5;
 }
 @utility badge {
   @apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold;
 }
 @utility section-title {
-  @apply font-serif text-2xl font-semibold text-ink-900 sm:text-3xl;
+  @apply border-l-4 border-brand-600 pl-3 text-2xl font-bold text-ink-900 sm:text-3xl;
 }
-@utility prose-calm {
+@utility prose-plain {
   @apply max-w-prose text-ink-700;
 }
 
 @media print {
+  .page-break {
+    break-after: page;
+    page-break-after: always;
+  }
+  .page-break:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
   .no-print {
     display: none !important;
   }

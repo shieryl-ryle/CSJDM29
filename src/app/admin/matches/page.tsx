@@ -29,7 +29,7 @@ export default async function AdminMatches({ searchParams }: { searchParams: Pro
   return (
     <div>
       <h1 className="section-title">Potential matches</h1>
-      <p className="prose-calm mt-2">Deterministic leads that need human review. Distinctive markings must be compared by a person.</p>
+      <p className="prose-plain mt-2">Deterministic leads that need human review. Distinctive markings must be compared by a person.</p>
       <p className="mt-3 text-sm">
         <Link className="underline" href={sp.show === "all" ? "/admin/matches" : "/admin/matches?show=all"}>{sp.show === "all" ? "Show only awaiting review" : "Show all, including reviewed"}</Link>
       </p>

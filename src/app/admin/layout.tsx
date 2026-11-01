@@ -11,6 +11,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     ["/admin/videos", "Source videos"],
     ["/admin/matches", "Potential matches"],
     ["/admin/witness", "Information received"],
+    ["/admin/export", "Export and print"],
     ["/admin/audit", "Audit log"],
   ];
   return (

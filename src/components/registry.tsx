@@ -20,12 +20,12 @@ export function PetSummaryCard({ pet, notes }: { pet: PublicPet; notes?: string[
       <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
         <dt className="text-ink-500">Source label</dt>
         <dd>
-          {pet.label_name ? <strong>{pet.label_name}</strong> : "—"}
+          {pet.label_name ? <strong>{pet.label_name}</strong> : "n/a"}
           {pet.label_weight_kg != null && <> · {Number(pet.label_weight_kg)} kg</>}
         </dd>
         <dt className="text-ink-500">Species</dt>
         <dd>{SPECIES_LABEL[pet.species]}</dd>
-        <dt className="text-ink-500">Colours</dt>
+        <dt className="text-ink-500">Colors</dt>
         <dd>{colorText(pet)}</dd>
         <dt className="text-ink-500">Size</dt>
         <dd>{SIZE_LABEL[pet.estimated_size]}</dd>
@@ -55,8 +55,8 @@ const FIELD_LABEL: Record<string, string> = {
   label_weight_kg: "Label: weight (kg)",
   species: "Species",
   possible_sex: "Possible sex",
-  primary_color: "Primary colour",
-  secondary_colors: "Secondary colours",
+  primary_color: "Primary color",
+  secondary_colors: "Secondary colors",
   estimated_size: "Estimated size",
   visible_markings: "Visible markings",
   collar_description: "Collar",
@@ -64,7 +64,7 @@ const FIELD_LABEL: Record<string, string> = {
   condition_notes: "Condition notes",
 };
 
-/** "Where did this information come from?" — every claim, grouped by field, newest first. Nothing is merged. */
+/** "Where did this information come from?": every claim, grouped by field, newest first. Nothing is merged. */
 export function ProvenanceList({ claims }: { claims: Pick<ClaimRow, "field_name" | "value" | "origin" | "source_label" | "source_type" | "source_timestamp_seconds" | "source_url" | "verification" | "extractor" | "recorded_at">[] }) {
   if (claims.length === 0) return <p className="text-sm text-ink-500">No provenance entries recorded yet.</p>;
   const byField = new Map<string, typeof claims>();
@@ -80,7 +80,7 @@ export function ProvenanceList({ claims }: { claims: Pick<ClaimRow, "field_name"
             {list.map((c, i) => (
               <li key={i} className={`rounded-xl border p-3 text-sm ${i === 0 ? "border-brand-200 bg-brand-50/40" : "border-sand-200 bg-white"}`}>
                 <p>
-                  <strong>“{c.value ?? "—"}”</strong> {i === 0 ? <span className="text-xs text-ink-500">(current)</span> : <span className="text-xs text-ink-500">(earlier entry)</span>}
+                  <strong>“{c.value ?? "n/a"}”</strong> {i === 0 ? <span className="text-xs text-ink-500">(current)</span> : <span className="text-xs text-ink-500">(earlier entry)</span>}
                 </p>
                 <p className="mt-1 text-xs text-ink-500">
                   {ORIGIN_LABEL[c.origin]} · source: {c.source_label ?? "not stated"}

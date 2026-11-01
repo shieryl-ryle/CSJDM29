@@ -24,7 +24,7 @@ export interface Comparison {
 export interface MatchResult {
   tier: Tier;
   comparisons: Comparison[];
-  /** internal ordering only — NEVER display */
+  /** internal ordering only, NEVER display */
   sortScore: number;
 }
 
@@ -195,7 +195,7 @@ function allColors(primary: string | null, secondary: string[] | null): string[]
 }
 
 // ---------------------------------------------------------------------------
-// Markings (text overlap — only ever used to prompt a human, never to confirm)
+// Markings (text overlap, only ever used to prompt a human, never to confirm)
 // ---------------------------------------------------------------------------
 const STOP = new Set(["the", "a", "an", "and", "or", "with", "on", "of", "in", "at", "to", "has", "have", "had", "is", "are", "was", "his", "her", "its", "very", "small", "big", "large", "little", "near", "left", "right", "side", "ang", "ng", "sa", "na", "may", "at", "ay", "pet", "dog", "cat"]);
 
@@ -249,7 +249,7 @@ export function computeMatch(c: MatchCase, p: MatchPet): MatchResult | null {
             : "unavailable",
   });
 
-  // Weight — prefer the owner's veterinary/verified weight
+  // Weight, prefer the owner's veterinary/verified weight
   const ownerWeight = c.verified_weight_kg ?? c.approx_weight_kg;
   const w = compareWeights(ownerWeight, p.label_weight_kg);
   comparisons.push({
@@ -260,7 +260,7 @@ export function computeMatch(c: MatchCase, p: MatchPet): MatchResult | null {
       w.level === "unavailable"
         ? "unavailable"
         : `${symbolWeights(ownerWeight as number)} (owner-submitted) vs ${symbolWeights(p.label_weight_kg as number)} (source label)` +
-          (w.level === "exact" ? "" : w.level === "within_0_5" ? " — within ±0.5 kg" : w.level === "within_1" ? " — within ±1 kg" : ` — differs by ${w.diff} kg`),
+          (w.level === "exact" ? "" : w.level === "within_0_5" ? ", within ±0.5 kg" : w.level === "within_1" ? ", within ±1 kg" : `, differs by ${w.diff} kg`),
   });
 
   // Sex
@@ -281,14 +281,14 @@ export function computeMatch(c: MatchCase, p: MatchPet): MatchResult | null {
   let primStatus: CompStatus = "unavailable";
   let primDetail = "unavailable";
   if (prim === "same") (primStatus = "match"), (primDetail = "consistent");
-  else if (prim === "similar") (primStatus = "close"), (primDetail = "similar colour family");
+  else if (prim === "similar") (primStatus = "close"), (primDetail = "similar color family");
   else if (prim === "different") {
     const cp = extractColors(c.primary_color)[0];
     const appears = pAll.some((x) => x === cp || sameFamily(x, cp));
-    if (appears) (primStatus = "close"), (primDetail = "owner's primary colour appears among the recovered record's colours");
+    if (appears) (primStatus = "close"), (primDetail = "owner's primary color appears among the recovered record's colors");
     else (primStatus = "differs"), (primDetail = `different (${c.primary_color} vs ${p.primary_color})`);
   }
-  comparisons.push({ field: "primary_color", label: "Primary colour", status: primStatus, detail: primDetail });
+  comparisons.push({ field: "primary_color", label: "Primary color", status: primStatus, detail: primDetail });
 
   const cSec = (c.secondary_colors ?? []).flatMap(extractColors);
   const pSec = (p.secondary_colors ?? []).flatMap(extractColors);
@@ -297,11 +297,11 @@ export function computeMatch(c: MatchCase, p: MatchPet): MatchResult | null {
   if (cSec.length && pSec.length) {
     const shared = cSec.filter((x) => pSec.some((y) => y === x || sameFamily(x, y)));
     if (shared.length) (secStatus = "match"), (secDetail = `in common: ${[...new Set(shared)].join(", ")}`);
-    else (secStatus = "differs"), (secDetail = "no secondary colours in common");
+    else (secStatus = "differs"), (secDetail = "no secondary colors in common");
   }
-  comparisons.push({ field: "secondary_colors", label: "Secondary colours", status: secStatus, detail: secDetail });
+  comparisons.push({ field: "secondary_colors", label: "Secondary colors", status: secStatus, detail: secDetail });
 
-  // Distinctive markings — human review only
+  // Distinctive markings, human review only
   const ct = markingTokens(c.distinctive_markings, c.distinguishing_description);
   const pt = markingTokens(p.visible_markings, p.collar_description, p.distinctive_features);
   if (ct.length && pt.length) {
@@ -311,8 +311,8 @@ export function computeMatch(c: MatchCase, p: MatchPet): MatchResult | null {
       label: "Distinctive markings",
       status: "review",
       detail: shared.length
-        ? `possible shared terms: ${shared.slice(0, 6).join(", ")} — requires human review`
-        : "no shared terms found automatically — requires human review",
+        ? `possible shared terms: ${shared.slice(0, 6).join(", ")}. Requires human review`
+        : "no shared terms found automatically. Requires human review",
     });
   } else {
     comparisons.push({ field: "markings", label: "Distinctive markings", status: "review", detail: "requires human review" });

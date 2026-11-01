@@ -1,8 +1,8 @@
-# Justice for CSJDM29 — evidence & pet-identification platform
+# Justice for CSJDM29, evidence & pet-identification platform
 
 An independent evidence-preservation, documentation and pet-identification registry for pet owners affected by the San Jose del Monte animal-remains discovery.
 
-**This is not an accusation site.** It never states that a person or business committed a crime, and never states that a recovered animal *is* someone's pet. It records what an owner claimed, what a source documented, what the system extracted, and what a human reviewer verified — and keeps those apart.
+**This is not an accusation site.** It never states that a person or business committed a crime, and never states that a recovered animal *is* someone's pet. It records what an owner claimed, what a source documented, what the system extracted, and what a human reviewer verified, and keeps those apart.
 
 Stack: Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · Supabase (Postgres, Auth, Storage) · Vercel.
 
@@ -15,7 +15,7 @@ Stack: Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · Supabase (Post
 2. **Project Settings → API**: copy
    - Project URL → `NEXT_PUBLIC_SUPABASE_URL`
    - `anon` `public` key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `service_role` key → `SUPABASE_SERVICE_ROLE_KEY` (**secret — server only**)
+   - `service_role` key → `SUPABASE_SERVICE_ROLE_KEY` (**secret, server only**)
 
 ### 1.2 Create the database
 1. **SQL Editor → New query**, paste the whole of [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql), **Run**.
@@ -34,9 +34,9 @@ Stack: Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · Supabase (Post
 The buckets are created with a 50 MB per-file cap (the Supabase **free plan maximum**). On a paid plan raise *Project Settings → Storage → Global file size limit* and the `file_size_limit` values in the migration, **and** `MAX_UPLOAD_BYTES` in [`src/lib/constants.ts`](src/lib/constants.ts). Files go browser → Supabase directly (signed URLs), so Vercel's 4.5 MB request limit does not apply.
 
 ### 1.5 Deploy to Vercel
-1. Push this folder to a GitHub repo (`.env*` is git-ignored — never commit secrets).
+1. Push this folder to a GitHub repo (`.env*` is git-ignored, never commit secrets).
 2. <https://vercel.com/new> → import the repo (framework is auto-detected as Next.js).
-3. **Environment Variables** (Production + Preview) — see [`.env.example`](.env.example):
+3. **Environment Variables** (Production + Preview), see [`.env.example`](.env.example):
 
    | Variable | Value |
    |---|---|
@@ -55,7 +55,7 @@ The buckets are created with a 50 MB per-file cap (the Supabase **free plan maxi
    update public.profiles set role = 'admin'
    where id = (select id from auth.users where email = 'you@example.com');
    ```
-   Use `'reviewer'` for reviewers. (Today `reviewer` and `admin` have the same permissions; `admin` is reserved for future admin-only actions.) Roles can **only** be changed this way — the app (and the database) will not let a user change their own role.
+   Use `'reviewer'` for reviewers. (Today `reviewer` and `admin` have the same permissions; `admin` is reserved for future admin-only actions.) Roles can **only** be changed this way, the app (and the database) will not let a user change their own role.
 3. Reload: a **Review** link appears in the header.
 
 ### 1.7 Run locally
@@ -73,7 +73,7 @@ npm run dev                    # http://localhost:3000
 2. Sign up as a *second* test user → **Report my pet** → fill step 1, upload a photo, then step 3 upload a receipt. Confirm **Original preserved** + a 64-hex **SHA-256** appears under each file, and the file preview/download works.
 3. Submit. As the admin: **Review → Owner cases → open it**; confirm you see provider/contact; confirm the *owner* cannot open `/admin`.
 4. As admin: **Recovered pets → New record** (name + weight + species + colours), tick *Publish*, **Approve**. Check `/registry` (signed-out window) shows it, and that provider/contact/transcript are nowhere on the page.
-5. Return to the owner's case → **Possible matches**: the record should appear with ✓/?/✗ lines, "characteristics in common", and the "not confirmation of identity" notice — **no percentages**.
+5. Return to the owner's case → **Possible matches**: the record should appear with ✓/?/✗ lines, "characteristics in common", and the "not confirmation of identity" notice, **no percentages**.
 6. Upload a frame on the record, tick *Show publicly*; on the public page confirm the image is **not loaded** until **Reveal images** is clicked.
 7. **Review → Audit log** shows the uploads, the approval, and (after downloading evidence) the access entries.
 8. `/cases/<id>/export` → **Print / save as PDF** produces the evidence package.
@@ -98,6 +98,7 @@ npm run typecheck && npm run build
 | Reviewer area | `src/app/admin/**` (queue, cases, recovered pets, source videos, matches, witness, audit) |
 | Upload pipeline | `src/app/api/upload/{prepare,finalize}`, `src/lib/upload-client.ts`, `src/components/uploader.tsx` |
 | Authorized file access | `src/app/api/evidence/[id]/download`, `src/app/api/media/[id]` |
+| Export and print | `src/app/api/export/zip/route.ts` (streaming ZIP), `src/app/admin/export`, `src/app/admin/print`, `src/components/evidence-package.tsx` |
 | Matching engine | `src/lib/matching.ts` (+ tests), `src/lib/match-service.ts` |
 | Provenance | `recovered_pet_claims` table, `submitPet` in `src/app/admin/actions.ts`, `ProvenanceList` |
 | Video-ingestion provider interfaces | `src/lib/ingestion/providers.ts` |
@@ -120,27 +121,35 @@ npm run typecheck && npm run build
 - Each recovered-pet field has a current value (column), an origin map (`field_origins`) and an **append-only claim history** (origin, source, source type, timestamp in the video, verification, extractor). The public page shows an origin badge per field and a "Where did this information come from?" panel. Nothing merges silently: a reviewer's correction is a *new* `reviewer_verified` claim beside the earlier `source_documented` one.
 
 **Matching** (`deterministic-v1`)
-- Name (exact / close spelling / shared token / phonetic), weight (exact, ±0.5 kg, ±1 kg, larger), species (different species excludes), sex (a difference downgrades *strong*), colours (EN + Filipino terms, colour families), date consistency. Distinctive markings are **never auto-matched** — shown as "requires human review", with shared terms listed.
-- Output is a tier — *strong / moderate / limited characteristics in common* — plus a per-field ✓ ≈ ✗ ? breakdown. No percentage and no identity claim anywhere. Matches are recomputed when a case is submitted/edited and when a record is approved/published/edited; reviewer decisions are never overwritten.
+- Name (exact / close spelling / shared token / phonetic), weight (exact, ±0.5 kg, ±1 kg, larger), species (different species excludes), sex (a difference downgrades *strong*), colours (EN + Filipino terms, colour families), date consistency. Distinctive markings are **never auto-matched**, shown as "requires human review", with shared terms listed.
+- Output is a tier, *strong / moderate / limited characteristics in common*, plus a per-field ✓ ≈ ✗ ? breakdown. No percentage and no identity claim anywhere. Matches are recomputed when a case is submitted/edited and when a record is approved/published/edited; reviewer decisions are never overwritten.
 
 **Other**
 - **Accounts are required for owners** (email + password) so evidence stays private and recoverable across devices. The "I have information" form needs no account and supports true anonymity (the account is simply not stored).
-- **Writes run under the user's own JWT** (so RLS and the DB audit triggers apply) wherever possible. The service role is used only for: signing/hashing files, registering evidence, anonymous witness submissions, public aggregate counters, match upserts, and app-level audit entries — each behind an explicit authorization check.
+- **Writes run under the user's own JWT** (so RLS and the DB audit triggers apply) wherever possible. The service role is used only for: signing/hashing files, registering evidence, anonymous witness submissions, public aggregate counters, match upserts, and app-level audit entries, each behind an explicit authorization check.
 - **Registry records are never hard-deleted**; use *Reject* or *Merge* so provenance survives.
-- **Evidence package = a print-optimised page** ("Print / save as PDF") with an evidence-index manifest SHA-256. No PDF library, no legal conclusions.
+- **Evidence package = a print-optimized page** ("Print / save as PDF") with an evidence-index manifest SHA-256. No PDF library, no legal conclusions.
 - Search runs in application code over the published registry (fine for hundreds of records; move to SQL/`pg_trgm` if it grows to thousands).
 - Historical reports reuse the case/evidence machinery (`case_kind = 'historical'`), labelled **owner-submitted report** until independently supported.
 
 ---
 
-## 5. Remove demo data before launch
+## 5. Export and print (replaces USB hand-offs)
+
+- **Owners:** on a case page, **Download all files (ZIP)** and **Print case summary**.
+- **Reviewers:** **Review > Export and print**. Select cases, then **Download ZIP of original files** or **Print selected packages** (up to 40 cases, one per page). Optional: include files from information submissions, include private contact details.
+- **ZIP layout:** `<case id>/case-summary.txt`, `<case id>/files/E01_<name>`, `MANIFEST.csv` (SHA-256 at upload and SHA-256 at export, with OK or HASH MISMATCH per file), `SHA256SUMS.txt` (verify with `sha256sum -c SHA256SUMS.txt`), `README.txt`, and `PROBLEMS.txt` if any file could not be read.
+- The ZIP is streamed one file at a time (no compression, flat memory). For very large selections export in groups; the route allows up to 300 seconds. Every export and print is written to the audit log.
+- **Printing** uses the browser: **Print / save as PDF**.
+
+## 6. Remove demo data before launch
 Run [`supabase/remove_demo_data.sql`](supabase/remove_demo_data.sql) in the SQL editor (claims are append-only, so this one-off script toggles that protection off and back on inside a transaction).
 
 ---
 
-## 6. Known limits (read this)
+## 7. Known limits
 
-- **The Supabase-dependent flows have not been exercised against a live Supabase project from here** (sign-up/sign-in, storage signed-URL upload from a real browser, server-side hash download). What *was* verified: the SQL migration + seed + RLS/privacy/immutability/audit rules (81 assertions in an in-process Postgres with Supabase-style stubs), the matching engine (unit tests), type-check, production build, and a smoke run of the built app (public pages render, protected routes redirect, API routes reject unauthenticated calls). Please run the §2 checklist on your project before announcing — step 2 is the important one.
+- **The Supabase-dependent flows have not been exercised against a live Supabase project from here** (sign-up/sign-in, storage signed-URL upload from a real browser, server-side hash download). What *was* verified: the SQL migration + seed + RLS/privacy/immutability/audit rules (81 assertions in an in-process Postgres with Supabase-style stubs), the matching engine (unit tests), type-check, production build, and a smoke run of the built app (public pages render, protected routes redirect, API routes reject unauthenticated calls). Please run the §2 checklist on your project before announcing, step 2 is the important one.
 - No malware scanning on uploads, no resumable (TUS) uploads, no thumbnail/redacted-copy generation yet (columns exist; originals are never modified). See [`TODO.md`](TODO.md).
 - Email delivery (confirmation links) uses Supabase's built-in mailer, which is heavily rate-limited; configure custom SMTP in Supabase for launch-day volume.
 - Deleting an owner's own evidence on request is a manual administrator procedure (originals are protected by trigger by design).

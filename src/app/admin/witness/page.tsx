@@ -17,7 +17,7 @@ export default async function AdminWitness() {
   return (
     <div>
       <h1 className="section-title">Information received</h1>
-      <p className="prose-calm mt-2">Submitted by community members. Treat as unverified until supported.</p>
+      <p className="prose-plain mt-2">Submitted by community members. Treat as unverified until supported.</p>
       <ul className="mt-5 space-y-4">
         {(data ?? []).map((w) => (
           <li key={w.id} className="card">
@@ -32,7 +32,7 @@ export default async function AdminWitness() {
               {w.location && <div><dt className="inline font-semibold">Location: </dt><dd className="inline">{w.location}</dd></div>}
               {w.contact && <div><dt className="inline font-semibold">Contact (private): </dt><dd className="inline">{w.contact}</dd></div>}
               {(w.links ?? []).length > 0 && (
-                <div><dt className="font-semibold">Links (unverified — open with care):</dt>
+                <div><dt className="font-semibold">Links (unverified):</dt>
                   <dd><ul className="list-disc pl-5">{w.links.map((l: string) => <li key={l} className="break-all">{l}</li>)}</ul></dd></div>
               )}
             </dl>

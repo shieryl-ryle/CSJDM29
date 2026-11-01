@@ -35,7 +35,10 @@ export default async function AdminCase({ params }: { params: Promise<{ id: stri
           <Badge tone="note">{CASE_STATUS_LABEL[kase.status]}</Badge>
         </div>
         <p className="mt-1 text-sm text-ink-500">Everything below is owner-submitted unless labelled otherwise. {kase.duplicate_of && "Marked as duplicate of another case."}</p>
-        <p className="mt-2"><Link href={`/cases/${id}/export`} className="btn-secondary btn-sm">Evidence package</Link></p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          <Link href={`/cases/${id}/export?contact=1`} className="btn-secondary btn-sm">Print case package</Link>
+          <form action="/api/export/zip" method="post"><input type="hidden" name="caseId" value={id} /><input type="hidden" name="contact" value="1" /><button className="btn-secondary btn-sm">Download files (ZIP)</button></form>
+        </div>
       </div>
 
       <section className="card">
@@ -91,7 +94,7 @@ export default async function AdminCase({ params }: { params: Promise<{ id: stri
           <ul className="mt-2 text-sm">
             {same!.map((s) => <li key={s.id}><Link className="underline" href={`/admin/cases/${s.id}`}>{s.case_number}</Link> · {s.pet_name ?? "Unnamed"}</li>)}
           </ul>
-          <p className="hint">Same wording only — this is for organizing related reports, not a finding of any kind.</p>
+          <p className="hint">Matched on identical wording only. Used to organize related reports. Not a finding.</p>
         </section>
       )}
 

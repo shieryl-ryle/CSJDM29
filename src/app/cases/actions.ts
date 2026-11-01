@@ -17,7 +17,7 @@ export async function createCase(kind: "current" | "historical") {
     .insert({ owner_id: user.id, case_kind: kind, status: "draft", contact_email: user.email ?? null })
     .select("id")
     .single();
-  if (error || !data) throw new Error("Could not start your report. Please try again.");
+  if (error || !data) throw new Error("Could not start the report. Try again.");
   redirect(`/cases/${data.id}/edit`);
 }
 
@@ -54,7 +54,7 @@ export async function submitCase(caseId: string, input: Record<string, unknown>)
     .from("cases")
     .update({ ...patch, status: "submitted", contact_email: merged.contact_email ?? user.email ?? null })
     .eq("id", caseId);
-  if (error) return { ok: false, message: "Could not submit. Please try again." };
+  if (error) return { ok: false, message: "Could not submit. Try again." };
 
   await recomputeMatchesForCase(caseId);
   revalidatePath("/cases");

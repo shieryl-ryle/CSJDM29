@@ -21,7 +21,7 @@ export async function signIn(_prev: AuthState, form: FormData): Promise<AuthStat
   if (!parsed.success) return { error: parsed.error.issues[0].message };
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword(parsed.data);
-  if (error) return { error: "That email and password don't match. Please try again." };
+  if (error) return { error: "Email or password is incorrect." };
   redirect(safeNext(form.get("next")));
 }
 
@@ -37,7 +37,7 @@ export async function signUp(_prev: AuthState, form: FormData): Promise<AuthStat
     options: { data: { display_name: name || undefined }, emailRedirectTo: `${site}/auth/callback?next=${encodeURIComponent(next)}` },
   });
   if (error) return { error: error.message };
-  if (!data.session) return { message: "Please check your email and tap the confirmation link to finish creating your account." };
+  if (!data.session) return { message: "Check your email and open the confirmation link to finish creating the account." };
   redirect(next);
 }
 

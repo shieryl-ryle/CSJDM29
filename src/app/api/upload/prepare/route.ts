@@ -37,7 +37,7 @@ export async function POST(req: Request) {
   let prefix: string;
 
   if (b.target === "evidence") {
-    if (!session) return fail("Please sign in", 401);
+    if (!session) return fail("Sign in required", 401);
     const { data: kase } = await session.supabase.from("cases").select("id, owner_id, status").eq("id", b.caseId).maybeSingle(); // RLS: owner or reviewer
     if (!kase) return fail("Case not found", 404);
     if (kase.status === "closed" && !isReviewerRole(session.profile.role)) return fail("This case is closed", 403);

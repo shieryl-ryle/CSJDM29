@@ -22,15 +22,15 @@ export function WitnessForm() {
     return (
       <div className="space-y-5">
         <div role="status" className="rounded-2xl border border-brand-200 bg-brand-50 p-4 text-brand-800">
-          <p className="font-semibold">Thank you. Your information has been received.</p>
-          <p className="text-sm">A reviewer will look at it. If you have photos, videos or documents, you can add them now.</p>
+          <p className="font-semibold">Information received.</p>
+          <p className="text-sm">A reviewer will review it. Photos, videos and documents can be added below.</p>
         </div>
         <div className="card">
-          <h2 className="font-semibold">Add photos, videos or documents (optional)</h2>
-          <p className="hint mb-3">Only files you personally have. Please don’t edit or crop evidence — send the original.</p>
+          <h2 className="font-semibold">Attach photos, videos or documents (optional)</h2>
+          <p className="hint mb-3">Upload only files you personally have. Do not edit or crop evidence. Send the original.</p>
           <Uploader buildOptions={buildOptions} />
         </div>
-        <p className="text-sm text-ink-500">You can close this page when you’re done.</p>
+        <p className="text-sm text-ink-500">This page can be closed when uploads are complete.</p>
       </div>
     );
   }
@@ -48,7 +48,7 @@ export function WitnessForm() {
       }}
     >
       <p className="rounded-xl border border-note-200 bg-note-50 p-3 text-sm text-note-800">
-        Please submit information you personally possess or can identify the source of. Do not fabricate, alter, or misrepresent evidence.
+        Submit information you personally possess or can identify the source of. Do not fabricate, alter, or misrepresent evidence.
       </p>
       <div className="hidden" aria-hidden>
         <label>Website<input name="website" tabIndex={-1} autoComplete="off" /></label>
@@ -73,18 +73,18 @@ export function WitnessForm() {
       </div>
       <div>
         <label className="label" htmlFor="links">Links (optional)</label>
-        <textarea id="links" name="links" rows={2} className="input" placeholder="One per line — must start with https://" />
+        <textarea id="links" name="links" rows={2} className="input" placeholder="One per line. Must start with https://" />
       </div>
       <label className="flex items-start gap-3 rounded-xl border border-sand-300 bg-white p-4">
         <input type="checkbox" name="anonymous" className="mt-1 size-6 shrink-0" checked={anonymous} onChange={(e) => setAnonymous(e.target.checked)} />
         <span className="text-sm text-ink-700">
-          <strong>Submit anonymously.</strong> We won’t store your account with this submission.
+          <strong>Submit anonymously.</strong> Your account is not stored with this submission.
         </span>
       </label>
       <div>
         <label className="label" htmlFor="contact">Contact (optional)</label>
-        <input id="contact" name="contact" className="input" maxLength={300} placeholder={anonymous ? "Leave blank to stay fully anonymous" : "Email or mobile — only reviewers can see this"} />
-        <p className="hint">Only reviewers can see this. It is never published.</p>
+        <input id="contact" name="contact" className="input" maxLength={300} placeholder={anonymous ? "Leave blank to stay fully anonymous" : "Email or mobile. Visible to reviewers only"} />
+        <p className="hint">Visible to reviewers only. Never published.</p>
       </div>
       {error && <p role="alert" className="rounded-xl bg-soft-50 p-3 text-sm text-soft-800">{error}</p>}
       <button className="btn-primary w-full" disabled={pending}>{pending ? "Sending…" : "Send information"}</button>

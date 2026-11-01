@@ -82,7 +82,7 @@ export async function uploadOne(original: File, o: UploadOptions): Promise<Recor
       if (lastErr.startsWith("upload-rejected")) throw new Error("This file was not accepted (type or size).");
     }
   }
-  if (!uploaded) throw new Error("Upload interrupted — check your connection and try again.");
+  if (!uploaded) throw new Error("Upload interrupted. Check the connection and try again.");
 
   o.onStage("saving");
   for (let attempt = 0; attempt < 4; attempt++) {
@@ -101,5 +101,5 @@ export async function uploadOne(original: File, o: UploadOptions): Promise<Recor
       if (e instanceof Error && e.message !== "Failed to fetch" && !/network/i.test(e.message)) throw e;
     }
   }
-  throw new Error("Could not confirm the upload. Please try again.");
+  throw new Error("Could not confirm the upload. Try again.");
 }

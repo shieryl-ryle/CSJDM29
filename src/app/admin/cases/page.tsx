@@ -35,8 +35,8 @@ export default async function AdminCases({ searchParams }: { searchParams: Promi
             <div>
               <Link href={`/admin/cases/${c.id}`} className="font-semibold text-brand-800 hover:underline">{c.case_number} · {c.pet_name || "Unnamed"}</Link>
               <p className="text-xs text-ink-500">
-                {c.case_kind === "historical" ? "Previous experience · " : ""}
-                {c.species ?? "species n/a"} · provider (private): {c.provider_name ?? "—"} · submitted {formatDate(c.submitted_at)}
+                {c.case_kind === "historical" ? "Previous incident · " : ""}
+                {c.species ?? "species n/a"} · provider (private): {c.provider_name ?? "n/a"} · submitted {formatDate(c.submitted_at)}
               </p>
             </div>
             <Badge tone={c.status === "submitted" ? "note" : "neutral"}>{CASE_STATUS_LABEL[c.status]}</Badge>
