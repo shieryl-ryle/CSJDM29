@@ -63,6 +63,10 @@ export function ExportPicker({ rows, witnessFiles, witnessBytes }: { rows: Expor
           Include files from information submissions ({witnessFiles} file{witnessFiles === 1 ? "" : "s"}, {formatBytes(witnessBytes)})
         </label>
         <label className="flex items-center gap-3">
+          <input type="checkbox" name="images" value="1" className="size-5" />
+          Include evidence images in printed packages (loads many images; use for a few cases at a time)
+        </label>
+        <label className="flex items-center gap-3">
           <input type="checkbox" name="contact" value="1" checked={contact} onChange={(e) => setContact(e.target.checked)} className="size-5" />
           Include private contact details in case summaries
         </label>

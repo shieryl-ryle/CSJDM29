@@ -109,8 +109,8 @@ export default function Guide() {
         <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-ink-700">
           <li><strong>My cases</strong> lists your reports. Open one to add evidence at any time. Dates and uploads form a timeline automatically. You can add timeline events.</li>
           <li><strong>Possible matches</strong> lists documented recovered animals with characteristics in common. It stays empty until reviewers add records to the registry. {MATCH_NOTICE}</li>
-          <li><strong>Print case summary</strong> opens a print-ready package. Use the browser Print option to print or save as PDF.</li>
-          <li><strong>Download all files (ZIP)</strong> downloads every original file with a manifest of SHA-256 values. Give this to investigators or authorities when asked.</li>
+          <li><strong>Download (ZIP)</strong> is on <Link className="underline" href="/cases">My cases</Link> and on each case. It contains a readable case record with the images (open <code>case-summary.html</code> in a browser), the same record as text, every original file, and a manifest of SHA-256 values. Give the ZIP to investigators or authorities when asked.</li>
+          <li><strong>Print or save as PDF</strong> opens a print-ready package that includes the evidence images. Use the browser Print option to print or save as PDF.</li>
           <li>Reviewers see your report and evidence. Each reviewer preview or download of a file is recorded in an audit log.</li>
         </ul>
       </section>

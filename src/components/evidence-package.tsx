@@ -8,7 +8,7 @@ import { buildTimeline } from "@/lib/timeline";
 type CaseData = NonNullable<Awaited<ReturnType<typeof loadCase>>>;
 
 /** Print-ready evidence package for one case. States information only; no legal conclusions. */
-export function EvidencePackage({ data, withContact, generatedAt }: { data: CaseData; withContact: boolean; generatedAt: string }) {
+export function EvidencePackage({ data, withContact, generatedAt, imageUrls, omittedImages = 0 }: { data: CaseData; withContact: boolean; generatedAt: string; imageUrls?: Record<string, string>; omittedImages?: number }) {
   const { kase, evidence, events, matches } = data;
   const labels = evidenceLabelMap(evidence);
   const sorted = [...evidence].sort((a, b) => a.uploaded_at.localeCompare(b.uploaded_at));
@@ -66,10 +66,18 @@ export function EvidencePackage({ data, withContact, generatedAt }: { data: Case
                 <p>Uploaded {formatDateTime(e.uploaded_at)}. File: {e.original_filename}. Size: {formatBytes(e.size_bytes)}. Source: {SOURCE_TYPE_LABEL[e.source_type] ?? e.source_type}. Visibility: {e.visibility === "private" ? "private" : "public (approved)"}.</p>
                 {e.description && <p>Note: {e.description}</p>}
                 <p className="break-all font-mono text-xs">SHA-256: {e.sha256}</p>
+                {imageUrls?.[e.id] && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={imageUrls[e.id]} alt={e.original_filename} loading="eager" className="mt-2 max-h-80 max-w-full border border-sand-300 object-contain" />
+                )}
+                {imageUrls && !imageUrls[e.id] && e.mime_type.startsWith("image/") && (
+                  <p className="mt-1 text-xs text-ink-500">Image not shown in this printout. The original is in the ZIP download.</p>
+                )}
               </li>
             ))}
           </ul>
         )}
+        {omittedImages > 0 && <p className="mt-3 text-xs text-ink-500">{omittedImages} further image(s) are not shown in this printout. All originals are in the ZIP download.</p>}
         <p className="mt-4 break-all text-xs"><strong>Evidence index manifest SHA-256</strong> (over the index above): <span className="font-mono">{manifestHash}</span></p>
       </section>
 

@@ -161,9 +161,9 @@ Reviewers and admins are exempt. Change the numbers in `0002_limits.sql` and `sr
 
 ## 6. Export and print (replaces USB hand-offs)
 
-- **Owners:** on a case page, **Download all files (ZIP)** and **Print case summary**.
+- **Owners:** **My cases** has **Download (ZIP)** and **Print or save as PDF** for each case, plus **Download all cases (ZIP)**. The printout includes the evidence images (HEIC/HEIF are not displayed by browsers and are listed without a preview).
 - **Reviewers:** **Review > Export and print**. Select cases, then **Download ZIP of original files** or **Print selected packages** (up to 40 cases, one per page). Optional: include files from information submissions, include private contact details.
-- **ZIP layout:** `<case id>/case-summary.txt`, `<case id>/files/E01_<name>`, `MANIFEST.csv` (SHA-256 at upload and SHA-256 at export, with OK or HASH MISMATCH per file), `SHA256SUMS.txt` (verify with `sha256sum -c SHA256SUMS.txt`), `README.txt`, and `PROBLEMS.txt` if any file could not be read.
+- **ZIP layout:** `<case id>/case-summary.html` (readable record with images, opens offline), `<case id>/case-summary.txt`, `<case id>/files/E01_<name>`, `MANIFEST.csv` (SHA-256 at upload and SHA-256 at export, with OK or HASH MISMATCH per file), `SHA256SUMS.txt` (verify with `sha256sum -c SHA256SUMS.txt`), `README.txt`, and `PROBLEMS.txt` if any file could not be read.
 - The ZIP is streamed one file at a time (no compression, flat memory). For very large selections export in groups; the route allows up to 300 seconds. Every export and print is written to the audit log.
 - **Printing** uses the browser: **Print / save as PDF**.
 

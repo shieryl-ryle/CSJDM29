@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { Zip, ZipPassThrough } from "fflate";
 import { getSession, isReviewerRole } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
+import { caseSummaryHtml, type HtmlEvidence } from "@/lib/case-html";
 import { caseSummaryText } from "@/lib/case-text";
 import { EVIDENCE_TYPE_LABEL } from "@/lib/constants";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -119,7 +120,8 @@ export async function POST(req: Request) {
             `Cases: ${cases.length}   Files: ${totalFiles}`,
             "",
             "Contents",
-            "  <case id>/case-summary.txt   Owner-submitted case record (unverified).",
+            "  <case id>/case-summary.html  Readable case record with the images. Open in a browser, print or save as PDF.",
+            "  <case id>/case-summary.txt   The same case record as plain text (unverified, owner-submitted).",
             "  <case id>/files/             Original uploaded files, unmodified.",
             "  MANIFEST.csv                 One row per file with both SHA-256 values.",
             "  SHA256SUMS.txt               SHA-256 recorded at upload. Verify with: sha256sum -c SHA256SUMS.txt",
@@ -164,8 +166,25 @@ export async function POST(req: Request) {
 
         try {
           for (const c of cases) {
-            addText(`${c.case_number}/case-summary.txt`, caseSummaryText(c, includeContact));
             const list = evidenceByCase.get(c.id) ?? [];
+            const summaryText = caseSummaryText(c, includeContact);
+            const htmlRows: HtmlEvidence[] = list.map((e, i) => {
+              const ref = `E${String(i + 1).padStart(2, "0")}`;
+              return {
+                ref,
+                pathInZip: `files/${ref}_${sanitizeFilename(e.original_filename)}`,
+                filename: e.original_filename,
+                type: e.evidence_type,
+                source: e.source_type,
+                uploadedAt: e.uploaded_at,
+                size: e.size_bytes,
+                sha256: e.sha256,
+                description: e.description,
+                isImage: ["image/jpeg", "image/png", "image/webp", "image/gif"].includes(e.mime_type),
+              };
+            });
+            addText(`${c.case_number}/case-summary.txt`, summaryText);
+            addText(`${c.case_number}/case-summary.html`, caseSummaryHtml({ caseNumber: c.case_number, summaryText, evidence: htmlRows, generatedAt: new Date().toISOString() }));
             for (let i = 0; i < list.length; i++) await addFile(c.case_number, `E${String(i + 1).padStart(2, "0")}`, c.case_number, list[i]);
           }
           if (witnessFiles.length) {

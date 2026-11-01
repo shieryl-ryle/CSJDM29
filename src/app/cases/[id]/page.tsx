@@ -45,8 +45,8 @@ export default async function CasePage({ params, searchParams }: { params: Promi
       <nav className="mt-4 flex flex-wrap gap-2" aria-label="Case actions">
         <Link href={`/cases/${id}/edit`} className="btn-secondary btn-sm">{kase.status === "draft" ? "Continue report" : "Edit details"}</Link>
         {kase.case_kind === "current" && <Link href={`/cases/${id}/matches`} className="btn-secondary btn-sm">Possible matches ({matches.length})</Link>}
-        <Link href={`/cases/${id}/export`} className="btn-secondary btn-sm">Print case summary</Link>
-        <form action="/api/export/zip" method="post"><input type="hidden" name="caseId" value={id} /><button className="btn-secondary btn-sm">Download all files (ZIP)</button></form>
+        <Link href={`/cases/${id}/export`} className="btn-secondary btn-sm">Print or save as PDF</Link>
+        <form action="/api/export/zip" method="post"><input type="hidden" name="caseId" value={id} /><button className="btn-secondary btn-sm">Download case (ZIP)</button></form>
       </nav>
 
       <section className="mt-8">
