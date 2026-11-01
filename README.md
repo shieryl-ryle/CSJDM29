@@ -82,7 +82,7 @@ npm run dev                    # http://localhost:3000
 Automated checks you can run any time:
 ```bash
 npm test            # matching engine unit tests (names, weights, colours, tiers, search)
-npm run test:rls    # runs the real migration in an in-process Postgres and asserts privacy/RLS/immutability (86 checks)
+npm run test:rls    # runs the real migration in an in-process Postgres and asserts privacy/RLS/immutability (90 checks)
 npm run typecheck && npm run build
 ```
 
@@ -93,7 +93,7 @@ npm run typecheck && npm run build
 | Area | Location |
 |---|---|
 | Database, RLS, audit triggers, storage buckets | `supabase/migrations/0001_init.sql` |
-| Demo data / removal | `supabase/seed.sql`, `supabase/remove_demo_data.sql` |
+| Demo data / test-case removal | `supabase/seed.sql`, `supabase/remove_demo_data.sql`, `supabase/remove_test_cases.sql` |
 | Public site | `src/app/page.tsx`, `registry/`, `information/`, `about/`, `report/` |
 | Owner area | `src/app/cases/**` (list, wizard, vault + timeline, matches, export), `src/components/case-wizard.tsx` |
 | Reviewer area | `src/app/admin/**` (queue, cases, recovered pets, source videos, matches, witness, audit) |

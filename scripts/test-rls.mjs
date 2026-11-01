@@ -190,6 +190,26 @@ ok("audit_logs delete blocked (even service role)", denied(await as("service_rol
   ok("limits: reviewers exempt", revOk === 12, String(revOk));
 }
 
+// ---- test-case cleanup script
+{
+  const E = "55555555-5555-5555-5555-555555555555";
+  await db.query("insert into auth.users (id,email) values ($1,$2)", [E, "e@x.test"]);
+  const c = (await db.query(`insert into cases(owner_id, status, pet_name) values ($1,'submitted','Cleanup') returning id, case_number`, [E])).rows[0];
+  const keep = (await db.query(`insert into cases(owner_id, status, pet_name) values ($1,'submitted','Keep') returning id, case_number`, [E])).rows[0];
+  const ev = async (cid, p) => (await db.query(`insert into evidence(case_id, original_filename, mime_type, size_bytes, evidence_type, storage_path, sha256) values ($1,'f.jpg','image/jpeg',1,'receipt',$2,$3) returning id`, [cid, p, "e".repeat(64)])).rows[0].id;
+  const e1 = await ev(c.id, "cases/cleanup/f.jpg");
+  await ev(keep.id, "cases/keep/f.jpg");
+  await db.query(`insert into timeline_events(case_id, event_date, title, evidence_id, added_by) values ($1, current_date, 'x', $2, $3)`, [c.id, e1, E]);
+  const sql = readFileSync(new URL("../supabase/remove_test_cases.sql", import.meta.url), "utf8").replaceAll("('OC-00007')", `('${c.case_number}')`);
+  await db.exec(sql);
+  const gone = (await db.query(`select (select count(*) from cases where id=$1)::int c, (select count(*) from evidence where case_id=$1)::int e, (select count(*) from timeline_events where case_id=$1)::int t`, [c.id])).rows[0];
+  ok("cleanup script removes the chosen case, its evidence and timeline", gone.c === 0 && gone.e === 0 && gone.t === 0, JSON.stringify(gone));
+  const kept = (await db.query(`select (select count(*) from cases where id=$1)::int c, (select count(*) from evidence where case_id=$1)::int e`, [keep.id])).rows[0];
+  ok("cleanup script leaves other cases and their evidence alone", kept.c === 1 && kept.e === 1, JSON.stringify(kept));
+  ok("cleanup script re-arms the evidence delete protection", denied(await run(`delete from evidence where case_id=$1`, [keep.id])));
+  ok("cleanup script writes an audit entry", (await db.query(`select count(*)::int n from audit_logs where action='cases.test_data_removed' and entity_id=$1`, [c.case_number])).rows[0].n === 1);
+}
+
 // ---- seed file loads cleanly (twice = idempotent); only approved+published demo rows are public
 {
   const seed = readFileSync(new URL("../supabase/seed.sql", import.meta.url), "utf8");
