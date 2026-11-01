@@ -16,6 +16,7 @@ await db.exec(`
   grant execute on function auth.uid() to anon, authenticated, service_role;
 `);
 await db.exec(readFileSync(new URL("../supabase/migrations/0001_init.sql", import.meta.url), "utf8"));
+await db.exec(readFileSync(new URL("../supabase/migrations/0002_limits.sql", import.meta.url), "utf8"));
 
 let pass = 0, fail = 0;
 const results = [];
@@ -166,6 +167,27 @@ ok("audit_logs delete blocked (even service role)", denied(await as("service_rol
 {
   const b = (await db.query(`select id, public from storage.buckets order by id`)).rows;
   ok("all three storage buckets exist and are private", b.length === 3 && b.every((x) => x.public === false), JSON.stringify(b));
+}
+
+// ---- abuse limits (0002): 3 drafts, 10 cases per account; reviewers exempt
+{
+  const D = "44444444-4444-4444-4444-444444444444";
+  await db.query("insert into auth.users (id,email) values ($1,$2)", [D, "d@x.test"]);
+  const mk = () => as("authenticated", D, () => run(`insert into cases(owner_id) values ($1) returning id`, [D]));
+  const ids = [];
+  for (let i = 0; i < 3; i++) { const r = await mk(); if (r.rows?.[0]) ids.push(r.rows[0].id); }
+  ok("limits: 3 drafts allowed", ids.length === 3);
+  const fourth = await mk();
+  ok("limits: 4th simultaneous draft refused", !!fourth.error && /draft limit/.test(fourth.error), fourth.error);
+  for (const id of ids) await as("authenticated", D, () => run(`update cases set status='submitted' where id=$1`, [id]));
+  let made = 3;
+  for (let i = 0; i < 7; i++) { const r = await mk(); if (r.rows?.[0]) { made++; await as("authenticated", D, () => run(`update cases set status='submitted' where id=$1`, [r.rows[0].id])); } }
+  ok("limits: up to 10 cases per account", made === 10, String(made));
+  const eleventh = await mk();
+  ok("limits: 11th case refused", !!eleventh.error && /case limit/.test(eleventh.error), eleventh.error);
+  let revOk = 0;
+  for (let i = 0; i < 12; i++) { const r = await as("authenticated", R, () => run(`insert into cases(owner_id) values ($1) returning id`, [R])); if (r.rows?.[0]) revOk++; }
+  ok("limits: reviewers exempt", revOk === 12, String(revOk));
 }
 
 // ---- seed file loads cleanly (twice = idempotent); only approved+published demo rows are public

@@ -10,6 +10,8 @@ Interfaces / schema exist for most of these; nothing below is faked in the UI.
 - [ ] Legal/privacy review of the wording on `/about` and the consent checkbox.
 
 ## P1 follow-ups
+- [ ] CAPTCHA token on sign-up (Supabase Attack Protection) if bot sign-ups appear.
+- [ ] Per-day global cap on information submissions if the form is abused.
 - [ ] Owner-facing "request removal / correction" flow.
 - [ ] Reviewer user-management page (roles are currently set by SQL).
 - [ ] Orphan cleanup job for objects uploaded but never finalized.

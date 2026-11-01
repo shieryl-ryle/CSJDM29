@@ -20,8 +20,9 @@ Stack: Next.js 16 (App Router) · TypeScript · Tailwind CSS 4 · Supabase (Post
 ### 1.2 Create the database
 1. **SQL Editor → New query**, paste the whole of [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql), **Run**.
    It creates the tables, row-level security, audit triggers, public views, the three **private** storage buckets and the `public_stats()` function.
-2. *(Optional, for a smoke test)* run [`supabase/seed.sql`](supabase/seed.sql) to load 5 clearly fictional `DEMO-00x` records. **Remove them before launch** (§5).
-3. *(CLI alternative)* `supabase link --project-ref <ref>` then `supabase db push`.
+2. Run [`supabase/migrations/0002_limits.sql`](supabase/migrations/0002_limits.sql) the same way (per-account limits, duplicate-lookup indexes).
+3. *(Optional, for a smoke test)* run [`supabase/seed.sql`](supabase/seed.sql) to load 5 clearly fictional `DEMO-00x` records. **Remove them before launch** (§5).
+4. *(CLI alternative)* `supabase link --project-ref <ref>` then `supabase db push`.
 
 ### 1.3 Auth settings (Authentication → …)
 - **URL Configuration**
@@ -81,7 +82,7 @@ npm run dev                    # http://localhost:3000
 Automated checks you can run any time:
 ```bash
 npm test            # matching engine unit tests (names, weights, colours, tiers, search)
-npm run test:rls    # runs the real migration in an in-process Postgres and asserts privacy/RLS/immutability (81 checks)
+npm run test:rls    # runs the real migration in an in-process Postgres and asserts privacy/RLS/immutability (86 checks)
 npm run typecheck && npm run build
 ```
 
@@ -134,7 +135,28 @@ npm run typecheck && npm run build
 
 ---
 
-## 5. Export and print (replaces USB hand-offs)
+## 5. Limits and capacity
+
+| Limit | Value | Where |
+|---|---|---|
+| Cases per account | 10 | database trigger (`0002_limits.sql`) |
+| Unsubmitted drafts per account | 3 | database trigger |
+| Starting a report with an untouched draft already open | reuses that draft | `createCase` |
+| Same pet name submitted twice by one account | blocked at submit | `submitCase` |
+| File size | 50 MB | bucket + upload routes |
+| Files per case | 100 | `MAX_FILES_PER_CASE` |
+| Storage per owner account | 300 MB | `MAX_BYTES_PER_ACCOUNT` |
+| Information form | 5 submissions per hour per connection, 10 files each | `submitWitness`, upload routes |
+
+Reviewers and admins are exempt. Change the numbers in `0002_limits.sql` and `src/lib/constants.ts`.
+
+**Duplicates across accounts** (for example a concerned citizen and the owner both reporting one pet) are not blocked, because that would reject legitimate reports. Reviewers see a **Possible duplicates** panel on each case (same pet name, same phone or same email) and mark confirmed duplicates.
+
+**Supabase plan size.** Free plan: 1 GB file storage, 500 MB database. Phone photos are about 3 MB and originals cannot be compressed (evidence integrity), so roughly 300 photos fill the free tier. Move to the Pro plan before a public launch and watch **Project Settings > Usage**.
+
+**Bot sign-ups.** With email confirmation off, sign-up is open. Enable CAPTCHA (Turnstile or hCaptcha) under Supabase Authentication > Attack Protection if abuse appears. The sign-up form then needs to pass the CAPTCHA token (not implemented yet, see TODO).
+
+## 6. Export and print (replaces USB hand-offs)
 
 - **Owners:** on a case page, **Download all files (ZIP)** and **Print case summary**.
 - **Reviewers:** **Review > Export and print**. Select cases, then **Download ZIP of original files** or **Print selected packages** (up to 40 cases, one per page). Optional: include files from information submissions, include private contact details.
@@ -142,12 +164,12 @@ npm run typecheck && npm run build
 - The ZIP is streamed one file at a time (no compression, flat memory). For very large selections export in groups; the route allows up to 300 seconds. Every export and print is written to the audit log.
 - **Printing** uses the browser: **Print / save as PDF**.
 
-## 6. Remove demo data before launch
+## 7. Remove demo data before launch
 Run [`supabase/remove_demo_data.sql`](supabase/remove_demo_data.sql) in the SQL editor (claims are append-only, so this one-off script toggles that protection off and back on inside a transaction).
 
 ---
 
-## 7. Known limits
+## 8. Known limits
 
 - **The Supabase-dependent flows have not been exercised against a live Supabase project from here** (sign-up/sign-in, storage signed-URL upload from a real browser, server-side hash download). What *was* verified: the SQL migration + seed + RLS/privacy/immutability/audit rules (81 assertions in an in-process Postgres with Supabase-style stubs), the matching engine (unit tests), type-check, production build, and a smoke run of the built app (public pages render, protected routes redirect, API routes reject unauthenticated calls). Please run the §2 checklist on your project before announcing, step 2 is the important one.
 - No malware scanning on uploads, no resumable (TUS) uploads, no thumbnail/redacted-copy generation yet (columns exist; originals are never modified). See [`TODO.md`](TODO.md).

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getSession, isReviewerRole } from "@/lib/auth";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { MAX_FILES_PER_CASE, MAX_UPLOAD_BYTES, MAX_WITNESS_FILES } from "@/lib/constants";
+import { MAX_BYTES_PER_ACCOUNT, MAX_FILES_PER_CASE, MAX_UPLOAD_BYTES, MAX_WITNESS_FILES } from "@/lib/constants";
 import { sanitizeFilename, TARGET_BUCKET, TARGET_MIME } from "@/lib/uploads";
 
 export const runtime = "nodejs";
@@ -43,6 +43,11 @@ export async function POST(req: Request) {
     if (kase.status === "closed" && !isReviewerRole(session.profile.role)) return fail("This case is closed", 403);
     const { count } = await admin.from("evidence").select("id", { count: "exact", head: true }).eq("case_id", b.caseId);
     if ((count ?? 0) >= MAX_FILES_PER_CASE) return fail("File limit reached for this case");
+    if (!isReviewerRole(session.profile.role)) {
+      const { data: mine } = await admin.from("evidence").select("size_bytes").eq("uploaded_by", session.user.id);
+      const used = (mine ?? []).reduce((n, r) => n + Number(r.size_bytes), 0);
+      if (used + b.size > MAX_BYTES_PER_ACCOUNT) return fail("Storage limit for this account reached. Contact a reviewer to submit more files.", 403);
+    }
     prefix = `cases/${b.caseId}`;
   } else if (b.target === "witness") {
     const { data: sub } = await admin.from("witness_submissions").select("id, upload_key").eq("id", b.submissionId).maybeSingle();

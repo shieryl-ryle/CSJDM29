@@ -118,7 +118,7 @@ export function Uploader({ buildOptions, accept = "image/*,application/pdf,video
               {j.status === "error" ? (
                 <p className="mt-1 text-soft-800">
                   {j.error}{" "}
-                  {!j.error?.startsWith("Too large") && !j.error?.includes("not accepted") && (
+                  {!j.error?.startsWith("Too large") && !j.error?.includes("not accepted") && !j.error?.includes("limit") && (
                     <button type="button" className="underline" onClick={() => retry(j)}>Try again</button>
                   )}
                 </p>

@@ -14,7 +14,8 @@ export const HASH_EXPLAINER =
   "This digital fingerprint helps demonstrate whether the uploaded file has changed.";
 
 export const MAX_UPLOAD_BYTES = 50 * 1024 * 1024;
-export const MAX_FILES_PER_CASE = 300;
+export const MAX_FILES_PER_CASE = 100;
+export const MAX_BYTES_PER_ACCOUNT = 300 * 1024 * 1024;
 export const MAX_WITNESS_FILES = 10;
 
 export const EVIDENCE_TYPES = [

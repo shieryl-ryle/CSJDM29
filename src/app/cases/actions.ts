@@ -12,11 +12,26 @@ import { recomputeMatchesForCase } from "@/lib/match-service";
 /** Start a draft (current case or historical report) and open its form. All writes use the user's RLS-bound client. */
 export async function createCase(kind: "current" | "historical") {
   const { supabase, user } = await requireUser("/report");
+  // Reuse an untouched draft instead of creating another (double taps, page refreshes, repeat visits)
+  const { data: empty } = await supabase
+    .from("cases")
+    .select("id")
+    .eq("owner_id", user.id)
+    .eq("case_kind", kind)
+    .eq("status", "draft")
+    .is("pet_name", null)
+    .is("narrative", null)
+    .limit(1)
+    .maybeSingle();
+  if (empty) redirect(`/cases/${empty.id}/edit`);
+
   const { data, error } = await supabase
     .from("cases")
     .insert({ owner_id: user.id, case_kind: kind, status: "draft", contact_email: user.email ?? null })
     .select("id")
     .single();
+  if (error?.message.includes("draft limit")) redirect("/report?error=draft");
+  if (error?.message.includes("case limit")) redirect("/report?error=limit");
   if (error || !data) throw new Error("Could not start the report. Try again.");
   redirect(`/cases/${data.id}/edit`);
 }
@@ -49,6 +64,22 @@ export async function submitCase(caseId: string, input: Record<string, unknown>)
   const merged = { ...current, ...patch };
   const missing = missingForSubmit(merged);
   if (missing.length) return { ok: false, missing };
+
+  // The same account submitting the same pet twice is almost always a mistake
+  if (merged.pet_name) {
+    const esc = String(merged.pet_name).replace(/[%_\\]/g, (m) => "\\" + m);
+    const { data: dup } = await supabase
+      .from("cases")
+      .select("case_number")
+      .eq("owner_id", user.id)
+      .eq("case_kind", merged.case_kind)
+      .neq("id", caseId)
+      .neq("status", "draft")
+      .ilike("pet_name", esc)
+      .limit(1)
+      .maybeSingle();
+    if (dup) return { ok: false, message: `A report for this pet name already exists (${dup.case_number}). Open that report to add evidence instead. If this is a different pet, change the name to tell them apart.` };
+  }
 
   const { error } = await supabase
     .from("cases")

@@ -12,6 +12,8 @@ import { addCaseNote, markDuplicate, reviewMatch, setCaseStatus } from "@/app/ad
 
 export const dynamic = "force-dynamic";
 
+type DupRow = { id: string; case_number: string; pet_name: string | null; species: string | null; status: string; contact_name: string | null };
+
 export default async function AdminCase({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const { supabase } = await requireReviewer();
@@ -24,6 +26,23 @@ export default async function AdminCase({ params }: { params: Promise<{ id: stri
       ? supabase.from("cases").select("id, case_number, pet_name").ilike("provider_name", kase.provider_name).neq("id", id).neq("status", "draft").limit(20)
       : Promise.resolve({ data: [] as { id: string; case_number: string; pet_name: string | null }[] }),
   ]);
+  // Possible duplicates across all accounts: same pet name, same phone, or same email (identical values only)
+  const esc = (v: string) => v.replace(/[\\%_]/g, (m) => "\\" + m);
+  const cols = "id, case_number, pet_name, species, status, contact_name";
+  const checks: { why: string; run: PromiseLike<{ data: DupRow[] | null }> }[] = [];
+  if (kase.pet_name) checks.push({ why: "same pet name", run: supabase.from("cases").select(cols).ilike("pet_name", esc(kase.pet_name)).neq("id", id).neq("status", "draft").limit(20) });
+  if (kase.contact_phone) checks.push({ why: "same phone", run: supabase.from("cases").select(cols).eq("contact_phone", kase.contact_phone).neq("id", id).neq("status", "draft").limit(20) });
+  if (kase.contact_email) checks.push({ why: "same email", run: supabase.from("cases").select(cols).ilike("contact_email", esc(kase.contact_email)).neq("id", id).neq("status", "draft").limit(20) });
+  const dupRows = new Map<string, DupRow & { why: string[] }>();
+  const dupResults = await Promise.all(checks.map((c) => c.run));
+  dupResults.forEach((r, i) => {
+    for (const row of r.data ?? []) {
+      const cur = dupRows.get(row.id);
+      if (cur) cur.why.push(checks[i].why);
+      else dupRows.set(row.id, { ...row, why: [checks[i].why] });
+    }
+  });
+  const duplicates = [...dupRows.values()];
   const timeline = buildTimeline({ kase, evidence, events, matches: matches.map((m) => ({ pet_number: m.pet.public_case_number, documented_on: m.pet.documented_on, tier: m.match.tier })) });
 
   return (
@@ -95,6 +114,20 @@ export default async function AdminCase({ params }: { params: Promise<{ id: stri
             {same!.map((s) => <li key={s.id}><Link className="underline" href={`/admin/cases/${s.id}`}>{s.case_number}</Link> · {s.pet_name ?? "Unnamed"}</li>)}
           </ul>
           <p className="hint">Matched on identical wording only. Used to organize related reports. Not a finding.</p>
+        </section>
+      )}
+
+      {duplicates.length > 0 && (
+        <section className="card border-l-4 border-l-brand-600">
+          <h2 className="font-semibold">Possible duplicates ({duplicates.length})</h2>
+          <ul className="mt-2 space-y-1 text-sm">
+            {duplicates.map((d) => (
+              <li key={d.id}>
+                <Link className="underline" href={`/admin/cases/${d.id}`}>{d.case_number}</Link> {d.pet_name ?? "Unnamed"} ({d.species ?? "species n/a"}), {d.contact_name ?? "contact n/a"}, matched on {d.why.join(" and ")}
+              </li>
+            ))}
+          </ul>
+          <p className="hint">Matched on identical values only. A match is not proof of a duplicate. Open both and compare before marking.</p>
         </section>
       )}
 
