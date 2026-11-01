@@ -47,6 +47,7 @@ export default async function ReviewerGuide() {
           <li><strong>Approve</strong> after checking. Tick <strong>Publish</strong> to show it in the public registry. <strong>Reject</strong> or <strong>Merge</strong> instead of deleting. Records are never hard-deleted.</li>
           <li>Frames are stored as graphic by default and hidden from the public. Tick <strong>Show publicly</strong> only after review. They remain behind a Reveal button.</li>
           <li>Condition notes and transcripts are reviewer-only and never appear on the public page.</li>
+          <li>Many records at once: <Link className="underline" href="/admin/import">Import records</Link> loads a CSV as unpublished candidates. Check each against its source, then tick them on the Recovered pets list and use <strong>Approve and publish selected</strong>.</li>
         </ol>
       </Block>
 

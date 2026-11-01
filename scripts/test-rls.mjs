@@ -210,6 +210,26 @@ ok("audit_logs delete blocked (even service role)", denied(await as("service_rol
   ok("cleanup script writes an audit entry", (await db.query(`select count(*)::int n from audit_logs where action='cases.test_data_removed' and entity_id=$1`, [c.case_number])).rows[0].n === 1);
 }
 
+// ---- CSV import shape + bulk approve/publish (as a reviewer, under RLS)
+{
+  const ins = await as("authenticated", R, () => run(
+    `insert into recovered_pets(label_name,label_weight_kg,species,possible_sex,primary_color,secondary_colors,estimated_size,visible_markings,source,source_url,video_start_seconds,documented_on,record_status,published,verification_status,field_origins,extracted_by,created_by)
+     values ('Import Test',5.2,'dog','female','white','{black,brown}','small','white paw','Test source','https://example.com/p',2058,'2026-10-30','candidate',false,'source_documented','{"label_name":"source_documented"}','manual',$1) returning id`, [R]));
+  const id = ins.rows?.[0]?.id;
+  ok("import: candidate row inserts under reviewer RLS", !!id, ins.error);
+  const cl = await as("authenticated", R, () => run(
+    `insert into recovered_pet_claims(recovered_pet_id,field_name,value,origin,source_label,source_type,source_timestamp_seconds,source_url,verification,extractor,recorded_by)
+     values ($1,'label_name','Import Test','source_documented','Test source','web_page',2058,'https://example.com/p','reviewed','csv-import',$2)`, [id, R]));
+  ok("import: provenance claim inserts", !cl.error, cl.error);
+  ok("import: candidate is not public", (await as("anon", null, () => run(`select 1 from public_recovered_pets where label_name='Import Test'`))).rows.length === 0);
+  const up = await as("authenticated", R, () => run(`update recovered_pets set record_status='approved', published=true, reviewed_by=$2, reviewed_at=now() where id = any($1::uuid[]) and record_status='candidate' returning id`, [[id], R]));
+  ok("bulk: approve and publish updates candidates", up.rows?.length === 1, up.error);
+  ok("bulk: published record is public", (await as("anon", null, () => run(`select 1 from public_recovered_pets where label_name='Import Test'`))).rows.length === 1);
+  const again = await as("authenticated", R, () => run(`update recovered_pets set published=false where id = any($1::uuid[]) and record_status='candidate' returning id`, [[id]]));
+  ok("bulk: already-approved records are not touched by a candidate-only update", again.rows?.length === 0);
+  ok("bulk: an owner cannot approve or publish", (await as("authenticated", A, () => run(`update recovered_pets set published=true where id=$1 returning id`, [id]))).rows?.length === 0);
+}
+
 // ---- seed file loads cleanly (twice = idempotent); only approved+published demo rows are public
 {
   const seed = readFileSync(new URL("../supabase/seed.sql", import.meta.url), "utf8");
@@ -223,7 +243,7 @@ ok("audit_logs delete blocked (even service role)", denied(await as("service_rol
   const left = (await db.query(`select count(*)::int n from recovered_pets where public_case_number like 'DEMO-%'`)).rows[0].n;
   ok("remove_demo_data.sql removes demo rows", left === 0, String(left));
   const realClaims = (await db.query(`select count(*)::int n from recovered_pet_claims`)).rows[0].n;
-  ok("remove_demo_data.sql leaves real claims alone and re-arms append-only", realClaims === 1 && denied(await run(`delete from recovered_pet_claims`)), String(realClaims));
+  ok("remove_demo_data.sql leaves real claims alone and re-arms append-only", realClaims === 2 && denied(await run(`delete from recovered_pet_claims`)), String(realClaims));
 }
 
 console.log(results.join("\n"));

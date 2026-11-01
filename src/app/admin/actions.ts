@@ -324,3 +324,124 @@ export async function setUserRole(form: FormData) {
   });
   revalidatePath("/admin/users");
 }
+
+// ---------------------------------------------------------------------------
+// CSV import of recovered-animal records (lands as unpublished CANDIDATES)
+// ---------------------------------------------------------------------------
+export interface ImportResult {
+  created: number;
+  skipped: string[];
+  errors: string[];
+}
+
+const IMPORT_MAX_ROWS = 300;
+const IMPORT_MAX_BYTES = 1024 * 1024;
+const IMPORT_FIELDS = [
+  "label_name", "label_weight_kg", "species", "possible_sex", "primary_color", "secondary_colors", "estimated_size",
+  "visible_markings", "collar_description", "distinctive_features", "condition_notes", "source", "source_url",
+  "source_video_identifier", "video_start", "video_end", "documented_on", "source_transcript",
+] as const;
+
+/**
+ * Each row becomes a CANDIDATE record, never public. Every filled factual field gets a provenance claim
+ * (origin: source-documented, source and URL as given in the row). A reviewer must approve before publishing.
+ * Re-uploading the same file does not create duplicates (same name + weight + source URL is skipped).
+ */
+export async function importPets(_prev: ImportResult | null, form: FormData): Promise<ImportResult> {
+  const { supabase, user, profile } = await requireReviewer();
+  const file = form.get("file");
+  if (!(file instanceof File) || file.size === 0) return { created: 0, skipped: [], errors: ["Choose a CSV file."] };
+  if (file.size > IMPORT_MAX_BYTES) return { created: 0, skipped: [], errors: ["File is larger than 1 MB."] };
+
+  const { csvToObjects } = await import("@/lib/csv");
+  const rows = csvToObjects(await file.text());
+  if (rows.length === 0) return { created: 0, skipped: [], errors: ["The file has no data rows."] };
+  if (rows.length > IMPORT_MAX_ROWS) return { created: 0, skipped: [], errors: [`Maximum ${IMPORT_MAX_ROWS} rows per file.`] };
+
+  const { data: existing } = await supabase.from("recovered_pets").select("label_name, label_weight_kg, source_url").limit(5000);
+  const keyOf = (name: string | null, w: unknown, url: string | null) => `${(name ?? "").toLowerCase()}|${w == null || w === "" ? "" : Number(w)}|${url ?? ""}`;
+  const seen = new Set((existing ?? []).map((e) => keyOf(e.label_name, e.label_weight_kg, e.source_url)));
+
+  const result: ImportResult = { created: 0, skipped: [], errors: [] };
+  for (let i = 0; i < rows.length; i++) {
+    const line = i + 2; // header is line 1
+    try {
+      const fd = new FormData();
+      for (const k of IMPORT_FIELDS) if (rows[i][k]) fd.set(k, rows[i][k]);
+      const f = readPetForm(fd);
+      const v = f.values as Record<string, unknown>;
+      const hasContent = v.label_name || v.label_weight_kg != null || v.species !== "unknown" || v.primary_color || v.visible_markings;
+      if (!hasContent) throw new Error("no name, weight, species, color or markings");
+
+      const key = keyOf(v.label_name as string | null, v.label_weight_kg, v.source_url as string | null);
+      if (seen.has(key)) {
+        result.skipped.push(`Row ${line}: already exists (${v.label_name ?? "no name"})`);
+        continue;
+      }
+
+      const origins: Record<string, string> = {};
+      const claimFields = CLAIM_FIELDS.filter((k) => {
+        const t = asText(v[k]);
+        return t != null && t !== "" && t !== "unknown";
+      });
+      for (const k of claimFields) origins[k] = "source_documented";
+
+      const { source_video_id: _unused, verification_status: _vs, ...rest } = v;
+      void _unused;
+      void _vs;
+      const { data: pet, error } = await supabase
+        .from("recovered_pets")
+        .insert({ ...rest, record_status: "candidate", published: false, verification_status: "source_documented", field_origins: origins, extracted_by: "manual", created_by: user.id })
+        .select("id")
+        .single();
+      if (error || !pet) throw new Error(error?.message ?? "insert failed");
+
+      if (claimFields.length) {
+        const { error: cErr } = await supabase.from("recovered_pet_claims").insert(
+          claimFields.map((k) => ({
+            recovered_pet_id: pet.id,
+            field_name: k,
+            value: asText(v[k]),
+            origin: "source_documented",
+            source_label: v.source,
+            source_type: v.source_url ? "web_page" : "manual_entry",
+            source_timestamp_seconds: v.video_start_seconds,
+            source_url: v.source_url,
+            verification: "reviewed",
+            extractor: "csv-import",
+            recorded_by: user.id,
+          })),
+        );
+        if (cErr) throw new Error(`provenance: ${cErr.message}`);
+      }
+      seen.add(key);
+      result.created++;
+    } catch (e) {
+      result.errors.push(`Row ${line}: ${e instanceof Error ? e.message : "invalid"}`);
+    }
+  }
+
+  await logAudit({ actorId: user.id, actorRole: profile.role, action: "recovered_pets.csv_import", entityType: "recovered_pets", entityId: "bulk", next: { file: file.name, rows: rows.length, created: result.created, skipped: result.skipped.length, errors: result.errors.length } });
+  revalidatePath("/admin/pets");
+  return result;
+}
+
+/** Approve (and optionally publish) several candidate records at once, after a person has checked them. */
+export async function bulkReviewPets(form: FormData) {
+  const { supabase, user, profile } = await requireReviewer();
+  const ids = form.getAll("id").map((v) => uuid(v));
+  const publish = form.get("intent") === "publish";
+  if (ids.length === 0) return;
+  const { data: done, error } = await supabase
+    .from("recovered_pets")
+    .update({ record_status: "approved", published: publish, reviewed_by: user.id, reviewed_at: new Date().toISOString() })
+    .in("id", ids)
+    .eq("record_status", "candidate")
+    .select("id");
+  if (error) throw new Error(error.message);
+  await logAudit({ actorId: user.id, actorRole: profile.role, action: publish ? "recovered_pets.bulk_publish" : "recovered_pets.bulk_approve", entityType: "recovered_pets", entityId: "bulk", next: { ids: (done ?? []).map((d) => d.id) } });
+  for (const d of done ?? []) await recomputeMatchesForPet(d.id);
+  revalidatePath("/admin/pets");
+  revalidatePath("/registry");
+  redirect(`/admin/pets?bulk=${(done ?? []).length}`);
+}

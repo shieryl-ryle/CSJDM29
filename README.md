@@ -82,7 +82,7 @@ npm run dev                    # http://localhost:3000
 Automated checks you can run any time:
 ```bash
 npm test            # matching engine unit tests (names, weights, colours, tiers, search)
-npm run test:rls    # runs the real migration in an in-process Postgres and asserts privacy/RLS/immutability (90 checks)
+npm run test:rls    # runs the real migration in an in-process Postgres and asserts privacy/RLS/immutability (97 checks)
 npm run typecheck && npm run build
 ```
 
