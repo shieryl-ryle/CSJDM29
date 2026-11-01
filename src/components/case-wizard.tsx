@@ -10,7 +10,7 @@ type Values = Record<string, string | boolean>;
 const FIELDS = [
   "pet_name", "species", "breed", "sex", "age_text", "primary_color", "secondary_colors", "distinctive_markings", "distinguishing_description",
   "approx_weight_kg", "verified_weight_kg", "weight_recorded_on", "death_date", "surrendered_on", "location", "vet_clinic",
-  "service_type", "service_other", "collected_on", "collection_method", "amount_paid", "cremains_received_on",
+  "provider_name", "service_type", "service_other", "collected_on", "collection_method", "amount_paid", "cremains_received_on",
   "urn_received", "fur_returned", "paw_print_returned", "certificate_received", "other_items_returned",
   "incident_year", "narrative", "refund_offered", "evidence_available_note", "other_details",
   "contact_name", "contact_phone", "contact_email", "contact_address", "consent_acknowledged",
@@ -262,6 +262,10 @@ export function CaseWizard({
         {stepName === "Aftercare" && (
           <>
             <p className="prose-plain">Details of the cremation or burial service. Private.</p>
+            <div>
+              {txt("provider_name", "Aftercare provider")}
+              <p className="hint">Private. The provider name is never published. Authorized reviewers use it to link related cases.</p>
+            </div>
             {select("service_type", "Service you purchased", SERVICE_TYPES)}
             {values.service_type === "other" && txt("service_other", "Describe the service")}
             {date("collected_on", "Date collected or handed over")}
@@ -286,6 +290,10 @@ export function CaseWizard({
             {txt("incident_year", "Year", { inputMode: "numeric", required: true, placeholder: "e.g. 2023" })}
             {txt("pet_name", "Pet name", { required: true })}
             {choice("species", "Species", [["dog", "Dog"], ["cat", "Cat"], ["other", "Other"]])}
+            <div>
+              {txt("provider_name", "Provider")}
+              <p className="hint">Private. Not shown publicly.</p>
+            </div>
             {select("service_type", "Service", SERVICE_TYPES)}
             {area("narrative", "What happened", { required: true, rows: 6, hint: "State what you personally experienced or have records of." })}
             {area("evidence_available_note", "Evidence you have available", { rows: 3, placeholder: "e.g. receipt, Messenger chat, photos of the urn" })}
